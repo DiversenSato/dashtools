@@ -322,8 +322,8 @@ export const RS_CHARACTERS = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvb
 export const HEX_CHARACTERS = "abcdef1234567890".split("")
 
 export const DIFFICULTIES = {
-    "-1": "NA",
-    0: "AUTO",
+    "-1": "AUTO",
+    0: "NA",
     1: "EASY",
     2: "NORMAL",
     3: "HARD",
@@ -334,8 +334,8 @@ export const DIFFICULTIES = {
     8: "HARD_DEMON",
     9: "INSANE_DEMON",
     10: "EXTREME_DEMON",
-    NA: -1,
-    AUTO: 0,
+    AUTO: -1,
+    NA: 0,
     EASY: 1,
     NORMAL: 2,
     HARD: 3,
