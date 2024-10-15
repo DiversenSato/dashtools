@@ -324,6 +324,9 @@ export class GDClient {
     getDailyChests(callback, params, options, secret) {
         rewards.getRewards(0, this, params, callback, options, secret)
     }
+    getQuests(callback, params, options, secret) {
+        rewards.getChallenges(this, params, callback, options, secret)
+    }
     requestModAccess(callback, params, options, secret) {
         accounts.requestModAccess(this, params, callback, options, secret)
     }
