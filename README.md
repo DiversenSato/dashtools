@@ -121,7 +121,8 @@ export const DEFAULT_ENDPOINTS = {
     "sfxLibraryVersion": "sfx/sfxlibrary_version.txt",
     "musicLibrary": "music/musiclibrary_02.dat",
     "musicLibraryOld": "music/musiclibrary.dat",
-    "sfxLibrary": "sfx/sfxlibrary.dat"
+    "sfxLibrary": "sfx/sfxlibrary.dat",
+    "getChallenges": "getGJChallenges.php"
 }
 ```
 
@@ -307,6 +308,7 @@ STAT_SUBMISSION = "xI35fsAapCRg"
 LIKE_OR_RATE = "ysg6pUrtjn0J"
 LEVEL_LEADERBOARDS = "yPg6pUrtWn0J"
 REWARDS = "pC26fpYaQCtg"
+CHALLENGES = "oC36fpYaPtdg"
 ```
 
 #### SECRETS
