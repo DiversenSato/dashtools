@@ -73,7 +73,8 @@ export const SALTS = {
     STAT_SUBMISSION: "xI35fsAapCRg",
     LIKE_OR_RATE: "ysg6pUrtjn0J",
     LEVEL_LEADERBOARDS: "yPg6pUrtWn0J",
-    REWARDS: "pC26fpYaQCtg"
+    REWARDS: "pC26fpYaQCtg",
+    CHALLENGES: "oC36fpYaPtdg"
 }
 
 export const DEFAULT_ENDPOINTS = {
@@ -135,7 +136,8 @@ export const DEFAULT_ENDPOINTS = {
     "sfxLibraryVersion": "sfx/sfxlibrary_version.txt",
     "musicLibrary": "music/musiclibrary_02.dat",
     "musicLibraryOld": "music/musiclibrary.dat",
-    "sfxLibrary": "sfx/sfxlibrary.dat"
+    "sfxLibrary": "sfx/sfxlibrary.dat",
+    "getChallenges": "getGJChallenges.php"
 }
 
 export const ENDPOINTS_2_205 = {
@@ -195,7 +197,8 @@ export const ENDPOINTS_2_205 = {
     "musicLibraryVersion": "music/musiclibrary_version.txt",
     "sfxLibraryVersion": "sfx/sfxlibrary_version.txt",
     "musicLibrary": "music/musiclibrary.dat",
-    "sfxLibrary": "sfx/sfxlibrary.dat"
+    "sfxLibrary": "sfx/sfxlibrary.dat",
+    "getChallenges": "getGJChallenges.php"
 }
 
 export const ENDPOINTS_2_113 = {
@@ -247,7 +250,8 @@ export const ENDPOINTS_2_113 = {
     "removeFriend": "removeGJFriend20.php",
     "getAccountURL": "getAccountURL.php",
     "getLevelLeaderboards": "getGJLevelScores211.php",
-    "backupSaveData": "accounts/backupGJAccountNew.php"
+    "backupSaveData": "accounts/backupGJAccountNew.php",
+    "getChallenges": "getGJChallenges.php"
 }
 export const ENDPOINTS_2_100 = {
     "getLevels": "getGJLevels21.php",
@@ -298,7 +302,8 @@ export const ENDPOINTS_2_100 = {
     "removeFriend": "removeGJFriend20.php",
     "getAccountURL": "getAccountURL.php",
     "getLevelLeaderboards": "getGJLevelScores.php",
-    "backupSaveData": "accounts/backupGJAccount.php"
+    "backupSaveData": "accounts/backupGJAccount.php",
+    "getChallenges": "getGJChallenges.php"
 }
 
 export const VERSIONLESS_ENDPOINTS = ["registerAccount"]
