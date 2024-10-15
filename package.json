@@ -1,6 +1,6 @@
 {
   "name": "dashtools",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Library for interacting with Geometry Dash servers",
   "main": "index.js",
   "scripts": {
