@@ -52,7 +52,7 @@ export function getRewards(type, instance, params, callback, options, secret) {
     }, instance, params, options, secret)
 }
 
-export function getChallenges(type, instance, params, callback, options, secret) {
+export function getChallenges(instance, params, callback, options, secret) {
     genericRequest("getChallenges", {
         chk: `${utils.rs(5)}${utils.base64Encode(utils.xor(utils.getRandomNumber(10000, 1000000).toString(), constants.KEYS.CHALLENGES))}`,
         udid: instance.account.udid,
@@ -63,12 +63,12 @@ export function getChallenges(type, instance, params, callback, options, secret)
         if (data == -1) throw new Error(-1)
         let segments = data.split("|")
         let infoRaw = segments[0].slice(5)
-        let info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHEST_REWARDS).split(":")
+        let info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHALLENGES).split(":")
         let startString = segments[0].slice(0, 5)
-        let small = info[6].split(",")
-        let big = info[9].split(",")
+        let quest1 = info[6].split(",")
+        let quest2 = info[7].split(",")
+        let quest3 = info[8].split(",")
         let hash = segments[1]
-        console.log(utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHEST_REWARDS))
         callback({
             randomString1: startString,
             randomString2: info[0],
@@ -76,25 +76,20 @@ export function getChallenges(type, instance, params, callback, options, secret)
             chkNumber: Number(info[2]),
             udid: info[3],
             accountID: Number(info[4]),
-            smallChestCooldown: Number(info[5]),
-            smallChest: {
-                orbs: Number(small[0]),
-                diamonds: Number(small[1]),
-                item1: Number(small[2]),
-                item2: Number(small[3])
-            },
-            claimedSmallChests: Number(info[7]),
-            largeChestCooldown: Number(info[8]),
-            largeChest: {
-                orbs: Number(big[0]),
-                diamonds: Number(big[1]),
-                item1: Number(big[2]),
-                item2: Number(big[3])
-            },
-            claimedLargeChests: Number(info[10]),
-            rewardType: Number(info[11]),
+            newQuestsCooldown: Number(info[5]),
+            quests: [
+                {
+                    unknown: quest1[0], type: Number(quest1[1]), amount: Number(quest1[2]), reward: Number(quest1[3]), name: quest1[4]
+                },
+                {
+                    unknown: quest2[0], type: Number(quest2[1]), amount: Number(quest2[2]), reward: Number(quest2[3]), name: quest2[4]
+                },
+                {
+                    unknown: quest3[0], type: Number(quest3[1]), amount: Number(quest3[2]), reward: Number(quest3[3]), name: quest3[4]
+                },
+            ],
             hash,
-            isHashValid: utils.sha1(`${infoRaw}${constants.SALTS.REWARDS}`) == hash
+            isHashValid: utils.sha1(`${infoRaw}${constants.SALTS.CHALLENGES}`) == hash
         })
     }, instance, params, options, secret)
 }
