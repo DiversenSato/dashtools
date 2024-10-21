@@ -195,7 +195,9 @@ export function downloadLevel(levelID, instance, params, callback, options, secr
     }
     genericRequest("downloadLevel", opt, function(data) {
         let segments = data.split("#")
-        let level = utils.parseLevel(segments[0])
+        let func = utils.parseLevel
+        if (instance.versions.gameVersion < 20) func = utils.parseLevelOld
+        let level = func(segments[0])
         let hashes = segments.slice(1, 3)
         let json = {
             level,
