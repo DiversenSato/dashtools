@@ -256,6 +256,7 @@ export function parseLevel(str) {
         6: "playerID",
         9: "difficulty",
         10: "downloads",
+        11: "completions",
         12: "officialSong",
         13: "gameVersion",
         14: "likes",
@@ -280,6 +281,7 @@ export function parseLevel(str) {
         26: "recordString",
         28: "uploadDate",
         29: "updateDate",
+        36: "extraString",
         48: "settingsString"
     }
     let boolKeys = {
@@ -306,6 +308,9 @@ export function parseLevel(str) {
     }
     if (raw.get("3")) {
         json.description = base64Decode(raw.get("3")).toString()
+        if (json.description.match(/[\x00-\x1f]/)) {
+            json.description = raw.get("3")
+        }
     }
     if (Number(raw.get("8"))) {
         json.difficulty /= Number(raw.get("8"))
@@ -324,7 +329,75 @@ export function parseLevel(str) {
         json.sfxIDs = raw.get("53").split(",")
     }
     for (let i of raw.keys()) {
-        if (!boolKeys[i] && !stringKeys[i] && !numberKeys[i] && !(["3", "8", "27", "52", "53"].includes(i))) {
+        if (!boolKeys[i] && !stringKeys[i] && !numberKeys[i] && !(["3", "4", "8", "27", "52", "53"].includes(i))) {
+            json[`unk_${i}`] = raw.get(i)
+        }
+    }
+    let date = Date.now()
+    let value = {
+        metadata: json,
+        parsedAt: date
+    }
+    if (levelString) value.levelString = levelString
+    return value
+}
+export function parseLevelOld(str) {
+    let json = {}
+    let numberKeys = {
+        1: "id",
+        5: "version",
+        6: "playerID",
+        9: "difficulty",
+        10: "downloads",
+        11: "completions",
+        12: "officialSong",
+        13: "gameVersion",
+        14: "likes",
+        15: "length",
+        18: "stars",
+        19: "featureScore",
+        26: "recordString",
+        30: "copiedFromID",
+        35: "customSongID",
+    }
+    let stringKeys = {
+        2: "name",
+        26: "recordString",
+        27: "password",
+        28: "uploadDate",
+        29: "updateDate",
+        36: "extraString"
+    }
+    let boolKeys = {
+        17: "demon",
+        25: "auto",
+        31: "twoPlayer"
+    }
+    let raw = robTopSplit(str, ":")
+    let levelString = raw.get("4")
+    for (let i of Object.entries(numberKeys)) {
+        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
+            json[i[1]] = Number(raw.get(i[0].toString())) || 0
+    }
+    for (let i of Object.entries(stringKeys)) {
+        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
+            json[i[1]] = raw.get(i[0].toString()) || ""
+    }
+    for (let i of Object.entries(boolKeys)) {
+        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
+            json[i[1]] = raw.get(i[0].toString()) ? !!Number(raw.get(i[0].toString())) : false
+    }
+    if (raw.get("3")) {
+        json.description = base64Decode(raw.get("3")).toString()
+        if (json.description.match(/[\x00-\x1f]/)) {
+            json.description = raw.get("3")
+        }
+    }
+    if (Number(raw.get("8"))) {
+        json.difficulty /= Number(raw.get("8"))
+    }
+    for (let i of raw.keys()) {
+        if (!boolKeys[i] && !stringKeys[i] && !numberKeys[i] && !(["3", "4", "8"].includes(i))) {
             json[`unk_${i}`] = raw.get(i)
         }
     }
