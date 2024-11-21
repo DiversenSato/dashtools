@@ -4,9 +4,9 @@ export const SECRETS = {
     DELETE: "Wmfv2898gc9",
     MOD: "Wmfp3879gc3",
     ADMIN: "Wmfx2878gb9"
-}
+};
 
-export const LIBRARY_SECRET = "8501f9c2-75ba-4230-8188-51037c4da102"
+export const LIBRARY_SECRET = "8501f9c2-75ba-4230-8188-51037c4da102";
 
 export const KEYS = {
     SAVE_DATA: "\x0B",
@@ -22,7 +22,7 @@ export const KEYS = {
     RATE: "58281",
     CHEST_REWARDS: "59182",
     STAT_SUBMISSION: "85271"
-}
+};
 
 export const LENGTHS = {
     0: "TINY",
@@ -37,7 +37,7 @@ export const LENGTHS = {
     LONG: 3,
     XL: 4,
     PLATFORMER: 5
-}
+};
 
 export const ICON_TYPES = {
     0: "CUBE",
@@ -62,9 +62,9 @@ export const ICON_TYPES = {
     SWING: 7,
     SWINGCOPTER: 7,
     JETPACK: 8
-}
+};
 
-export const LISTS_HASH = "f5da5823d94bbe7208dd83a30ff427c7d88fdb99" // sha-1 of xI25fpAapCQg (SALTS.LEVEL)
+export const LISTS_HASH = "f5da5823d94bbe7208dd83a30ff427c7d88fdb99"; // sha-1 of xI25fpAapCQg (SALTS.LEVEL)
 
 export const SALTS = {
     LEVEL: "xI25fpAapCQg",
@@ -75,7 +75,7 @@ export const SALTS = {
     LEVEL_LEADERBOARDS: "yPg6pUrtWn0J",
     REWARDS: "pC26fpYaQCtg",
     CHALLENGES: "oC36fpYaPtdg"
-}
+};
 
 export const DEFAULT_ENDPOINTS = {
     "getLevels": "getGJLevels21.php",
@@ -96,7 +96,6 @@ export const DEFAULT_ENDPOINTS = {
     "getRewards": "getGJRewards.php",
     "requestModAccess": "requestUserAccess.php",
     "getLeaderboards": "getGJScores20.php",
-    "deleteLevel": "deleteGJLevelUser20.php",
     "uploadAccountComment": "uploadGJAccComment20.php",
     "deleteAccountComment": "deleteGJAccComment20.php",
     "uploadComment": "uploadGJComment21.php",
@@ -138,7 +137,7 @@ export const DEFAULT_ENDPOINTS = {
     "musicLibraryOld": "music/musiclibrary.dat",
     "sfxLibrary": "sfx/sfxlibrary.dat",
     "getChallenges": "getGJChallenges.php"
-}
+};
 
 export const ENDPOINTS_2_205 = {
     "getLevels": "getGJLevels21.php",
@@ -159,7 +158,6 @@ export const ENDPOINTS_2_205 = {
     "getRewards": "getGJRewards.php",
     "requestModAccess": "requestUserAccess.php",
     "getLeaderboards": "getGJScores20.php",
-    "deleteLevel": "deleteGJLevelUser20.php",
     "uploadAccountComment": "uploadGJAccComment20.php",
     "deleteAccountComment": "deleteGJAccComment20.php",
     "uploadComment": "uploadGJComment21.php",
@@ -199,7 +197,7 @@ export const ENDPOINTS_2_205 = {
     "musicLibrary": "music/musiclibrary.dat",
     "sfxLibrary": "sfx/sfxlibrary.dat",
     "getChallenges": "getGJChallenges.php"
-}
+};
 
 export const ENDPOINTS_2_113 = {
     "getLevels": "getGJLevels21.php",
@@ -220,7 +218,6 @@ export const ENDPOINTS_2_113 = {
     "getRewards": "getGJRewards.php",
     "requestModAccess": "requestUserAccess.php",
     "getLeaderboards": "getGJScores20.php",
-    "deleteLevel": "deleteGJLevelUser20.php",
     "uploadAccountComment": "uploadGJAccComment20.php",
     "deleteAccountComment": "deleteGJAccComment20.php",
     "uploadComment": "uploadGJComment21.php",
@@ -252,7 +249,7 @@ export const ENDPOINTS_2_113 = {
     "getLevelLeaderboards": "getGJLevelScores211.php",
     "backupSaveData": "accounts/backupGJAccountNew.php",
     "getChallenges": "getGJChallenges.php"
-}
+};
 export const ENDPOINTS_2_100 = {
     "getLevels": "getGJLevels21.php",
     "getDailyLevel": "getGJDailyLevel.php",
@@ -272,7 +269,6 @@ export const ENDPOINTS_2_100 = {
     "getRewards": "getGJRewards.php",
     "requestModAccess": "requestUserAccess.php",
     "getLeaderboards": "getGJScores20.php",
-    "deleteLevel": "deleteGJLevelUser20.php",
     "uploadAccountComment": "uploadGJAccComment20.php",
     "deleteAccountComment": "deleteGJAccComment20.php",
     "uploadComment": "uploadGJComment21.php",
@@ -304,9 +300,9 @@ export const ENDPOINTS_2_100 = {
     "getLevelLeaderboards": "getGJLevelScores.php",
     "backupSaveData": "accounts/backupGJAccount.php",
     "getChallenges": "getGJChallenges.php"
-}
+};
 
-export const VERSIONLESS_ENDPOINTS = ["registerAccount"]
+export const VERSIONLESS_ENDPOINTS = ["registerAccount"];
 
 export const DEFAULT_HEADERS_22 = {
     "User-Agent": "",
@@ -314,17 +310,17 @@ export const DEFAULT_HEADERS_22 = {
     "Content-Type": "application/x-www-form-urlencoded",
     "Cookie": "gd=1;",
     "Host": "www.boomlings.com"
-}
+};
 
 export const DEFAULT_HEADERS_21 = {
     "User-Agent": "",
     "Accept": "*/*",
     "Content-Type": "application/x-www-form-urlencoded"
-}
+};
 
-export const RS_CHARACTERS = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890".split("")
+export const RS_CHARACTERS = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890".split("");
 
-export const HEX_CHARACTERS = "abcdef1234567890".split("")
+export const HEX_CHARACTERS = "abcdef1234567890".split("");
 
 export const DIFFICULTIES = {
     "-1": "AUTO",
@@ -351,59 +347,59 @@ export const DIFFICULTIES = {
     HARD_DEMON: 8,
     INSANE_DEMON: 9,
     EXTREME_DEMON: 10
-}
+};
 
 export const VERSIONS = {
     gameVersion: 22,
     binaryVersion: 42
-}
+};
 export const VERSIONS_2_205 = {
     gameVersion: 22,
     binaryVersion: 41
-}
+};
 export const VERSIONS_2_204 = {
     gameVersion: 22,
     binaryVersion: 40
-}
+};
 export const VERSIONS_2_200 = {
     gameVersion: 22,
     binaryVersion: 37
-}
+};
 export const VERSIONS_2_113 = {
     gameVersion: 21,
     binaryVersion: 35
-}
+};
 export const VERSIONS_2_111 = {
     gameVersion: 21,
     binaryVersion: 34
-}
+};
 export const VERSIONS_2_100 = {
     gameVersion: 21,
     binaryVersion: 33
-}
+};
 export const VERSIONS_2_011 = {
     gameVersion: 20,
     binaryVersion: 29
-}
+};
 export const VERSIONS_2_000 = {
     gameVersion: 20,
     binaryVersion: 27
-}
+};
 export const VERSIONS_1_930 = {
     gameVersion: 19,
     binaryVersion: 25
-}
+};
 export const SCORES = {
     TOP: "top",
     RELATIVE: "relative",
     FRIENDS: "friends",
     CREATORS: "creators"
-}
+};
 
-export const DEFAULT_SERVER = "https://www.boomlings.com/database"
-export const DEFAULT_SERVER_21 = "http://www.boomlings.com/database"
-export const DEFAULT_ACCOUNT_URL = "https://www.robtopgames.org/database"
-export const DEFAULT_CONTENT_URL = "https://geometrydashfiles.b-cdn.net"
+export const DEFAULT_SERVER = "https://www.boomlings.com/database";
+export const DEFAULT_SERVER_21 = "http://www.boomlings.com/database";
+export const DEFAULT_ACCOUNT_URL = "https://www.robtopgames.org/database";
+export const DEFAULT_CONTENT_URL = "https://geometrydashfiles.b-cdn.net";
 
 export const ITEMS = {
     FIRE: 1,
@@ -417,4 +413,4 @@ export const ITEMS = {
     METAL: 12,
     LIGHT: 13,
     SOUL: 14
-}
+};

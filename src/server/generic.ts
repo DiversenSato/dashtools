@@ -1,23 +1,23 @@
-import * as axios from "axios"
-import * as constants from "../constants.js"
-import * as utils from "../utils.js"
+import * as axios from "axios";
+import * as constants from "../constants.js";
+import * as utils from "../utils.js";
 
 export function genericRequest(endpoint, paramsInternal, callbackInternal, instance, params, options, secret) {
     let opts = {
         secret: secret || constants.SECRETS.COMMON
-    }
+    };
     if (!constants.VERSIONLESS_ENDPOINTS.includes(endpoint)) {
-        opts.gameVersion = instance.versions.gameVersion
-        opts.binaryVersion = instance.versions.binaryVersion
+        opts.gameVersion = instance.versions.gameVersion;
+        opts.binaryVersion = instance.versions.binaryVersion;
     }
-    if (instance.gdWorld) opts.gdw = 1
-    else if (opts.gameVersion == 21) opts.gdw = 0
+    if (instance.gdWorld) opts.gdw = 1;
+    else if (opts.gameVersion == 21) opts.gdw = 0;
     opts = {
         ...opts,
         ...paramsInternal,
         ...params
-    }
-    const hostElem = instance.server.replace("https://", "").replace("http://", "").split("/")[0]
+    };
+    const hostElem = instance.server.replace("https://", "").replace("http://", "").split("/")[0];
 
     // console.log(opts)
     axios.default.post(`${instance.server}/${instance.endpoints[endpoint]}`, opts, {
@@ -28,27 +28,27 @@ export function genericRequest(endpoint, paramsInternal, callbackInternal, insta
         ...options
     }).then(data => {
         // if (data.data < 0) throw new Error(data.data) 
-        callbackInternal(data.data)
+        callbackInternal(data.data);
     }).catch(e => {
-        throw e
-    })
+        throw e;
+    });
 }
 export function accountRequest(endpoint, paramsInternal, callbackInternal, instance, params, options, secret) {
     let opts = {
         secret: secret || constants.SECRETS.COMMON
-    }
+    };
     if (!constants.VERSIONLESS_ENDPOINTS.includes(endpoint)) {
-        opts.gameVersion = instance.versions.gameVersion
-        opts.binaryVersion = instance.versions.binaryVersion
+        opts.gameVersion = instance.versions.gameVersion;
+        opts.binaryVersion = instance.versions.binaryVersion;
     }
-    if (instance.gdWorld) opts.gdw = 1
-    else if (opts.gameVersion == 21) opts.gdw = 0
+    if (instance.gdWorld) opts.gdw = 1;
+    else if (opts.gameVersion == 21) opts.gdw = 0;
     opts = {
         ...opts,
         ...paramsInternal,
         ...params
-    }
-    const hostElem = instance.accountServer.replace("https://", "").replace("http://", "").split("/")[0]
+    };
+    const hostElem = instance.accountServer.replace("https://", "").replace("http://", "").split("/")[0];
 
     // console.log(opts)
     axios.default.post(`${instance.accountServer}/${instance.endpoints[endpoint]}`, opts, {
@@ -59,22 +59,22 @@ export function accountRequest(endpoint, paramsInternal, callbackInternal, insta
         ...options
     }).then(data => {
         // if (data.data < 0) throw new Error(data.data) 
-        callbackInternal(data.data)
+        callbackInternal(data.data);
     }).catch(e => {
-        throw e
-    })
+        throw e;
+    });
 }
 export function contentRequest(endpoint, paramsInternal, callbackInternal, instance, params, options) {
-    const expires = Math.floor(Date.now() / 1000) + 3600
+    const expires = Math.floor(Date.now() / 1000) + 3600;
     const opts = {
         expires,
         token: utils.generateCDNToken("/" + endpoint.replace(/$\//, ""), expires),
         ...paramsInternal,
         ...params
-    }
-    const hostElem = instance.contentServer.replace("https://", "").replace("http://", "").split("/")[0]
-    let path = instance.endpoints[endpoint]
-    if (!path) path = endpoint
+    };
+    const hostElem = instance.contentServer.replace("https://", "").replace("http://", "").split("/")[0];
+    let path = instance.endpoints[endpoint];
+    if (!path) path = endpoint;
 
     // console.log(opts)
     axios.default.get(`${instance.contentServer}/${path}`, {
@@ -85,8 +85,8 @@ export function contentRequest(endpoint, paramsInternal, callbackInternal, insta
         params: opts,
         ...options
     }).then(data => {
-        callbackInternal(data.data)
+        callbackInternal(data.data);
     }).catch(e => {
-        throw e
-    })
+        throw e;
+    });
 }

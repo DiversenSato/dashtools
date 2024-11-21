@@ -1,10 +1,10 @@
-import { genericRequest } from "./generic.js"
-import * as constants from "../constants.js"
-import * as utils from "../utils.js"
+import { genericRequest } from "./generic.js";
+import * as constants from "../constants.js";
+import * as utils from "../utils.js";
 
 export function likeItem(itemID, special, type, like, instance, params, callback, options, secret) {
-    if (!instance.account) throw new Error("You must authenticate in order to like/dislike items")
-    const rs = utils.rs(10)
+    if (!instance.account) throw new Error("You must authenticate in order to like/dislike items");
+    const rs = utils.rs(10);
     const chk = utils.chk([
         (special || 0), 
         itemID, 
@@ -14,7 +14,7 @@ export function likeItem(itemID, special, type, like, instance, params, callback
         (instance.account.accountID || 0), 
         (instance.account.udid || ""), 
         (instance.account.playerID || 0)
-    ], constants.KEYS.RATE, constants.SALTS.LIKE_OR_RATE)
+    ], constants.KEYS.RATE, constants.SALTS.LIKE_OR_RATE);
 
     genericRequest("likeItem", {
         itemID,
@@ -28,6 +28,6 @@ export function likeItem(itemID, special, type, like, instance, params, callback
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password)
     }, function(data) {
-        callback(data)
-    }, instance, params, options, secret)
+        callback(data);
+    }, instance, params, options, secret);
 }

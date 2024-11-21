@@ -1,6 +1,6 @@
-import { genericRequest } from "./generic.js"
-import * as constants from "../constants.js"
-import * as utils from "../utils.js"
+import { genericRequest } from "./generic.js";
+import * as constants from "../constants.js";
+import * as utils from "../utils.js";
 
 export function getRewards(type, instance, params, callback, options, secret) {
     genericRequest("getRewards", {
@@ -13,15 +13,15 @@ export function getRewards(type, instance, params, callback, options, secret) {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password)
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        const segments = data.split("|")
-        const infoRaw = segments[0].slice(5)
-        const info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHEST_REWARDS).split(":")
-        const startString = segments[0].slice(0, 5)
-        const small = info[6].split(",")
-        const big = info[9].split(",")
-        const hash = segments[1]
-        console.log(utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHEST_REWARDS))
+        if (data == -1) throw new Error(-1);
+        const segments = data.split("|");
+        const infoRaw = segments[0].slice(5);
+        const info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHEST_REWARDS).split(":");
+        const startString = segments[0].slice(0, 5);
+        const small = info[6].split(",");
+        const big = info[9].split(",");
+        const hash = segments[1];
+        console.log(utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHEST_REWARDS));
         callback({
             randomString1: startString,
             randomString2: info[0],
@@ -48,8 +48,8 @@ export function getRewards(type, instance, params, callback, options, secret) {
             rewardType: Number(info[11]),
             hash,
             isHashValid: utils.sha1(`${infoRaw}${constants.SALTS.REWARDS}`) == hash
-        })
-    }, instance, params, options, secret)
+        });
+    }, instance, params, options, secret);
 }
 
 export function getChallenges(instance, params, callback, options, secret) {
@@ -60,15 +60,15 @@ export function getChallenges(instance, params, callback, options, secret) {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password)
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        const segments = data.split("|")
-        const infoRaw = segments[0].slice(5)
-        const info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHALLENGES).split(":")
-        const startString = segments[0].slice(0, 5)
-        const quest1 = info[6].split(",")
-        const quest2 = info[7].split(",")
-        const quest3 = info[8].split(",")
-        const hash = segments[1]
+        if (data == -1) throw new Error(-1);
+        const segments = data.split("|");
+        const infoRaw = segments[0].slice(5);
+        const info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHALLENGES).split(":");
+        const startString = segments[0].slice(0, 5);
+        const quest1 = info[6].split(",");
+        const quest2 = info[7].split(",");
+        const quest3 = info[8].split(",");
+        const hash = segments[1];
         callback({
             randomString1: startString,
             randomString2: info[0],
@@ -90,6 +90,6 @@ export function getChallenges(instance, params, callback, options, secret) {
             ],
             hash,
             isHashValid: utils.sha1(`${infoRaw}${constants.SALTS.CHALLENGES}`) == hash
-        })
-    }, instance, params, options, secret)
+        });
+    }, instance, params, options, secret);
 }

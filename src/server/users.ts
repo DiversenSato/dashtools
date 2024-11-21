@@ -1,61 +1,61 @@
-import { genericRequest } from "./generic.js"
-import * as constants from "../constants.js"
-import * as utils from "../utils.js"
+import { genericRequest } from "./generic.js";
+import * as constants from "../constants.js";
+import * as utils from "../utils.js";
 
 export function searchUsers(username, instance, params, callback, options, secret) {
     genericRequest("getUsers", {str: username}, function(data) {
-        const segments = data.split("#")
-        const users = segments[0].split("|").map(u => utils.parseUser(u))
-        const pages = segments[1].split(":")
+        const segments = data.split("#");
+        const users = segments[0].split("|").map(u => utils.parseUser(u));
+        const pages = segments[1].split(":");
         callback({
             users,
             total: Number(pages[0]),
             offset: Number(pages[1]),
             pageSize: Number(pages[2]),
-        })
-    }, instance, params, options, secret)
+        });
+    }, instance, params, options, secret);
 }
 export function getUserByAccountID(accountID, logout, instance, params, callback, options, secret) {
-    const auth = {}
+    const auth = {};
     if (instance.account && !logout) {
-        auth.accountID = instance.account.accountID
-        auth.gjp2 = utils.gjp2(instance.account.password)
+        auth.accountID = instance.account.accountID;
+        auth.gjp2 = utils.gjp2(instance.account.password);
     }
     genericRequest("getUserInfo", {targetAccountID: accountID, ...auth}, function(data) {
-        callback(utils.parseUser(data))
-    }, instance, params, options, secret)
+        callback(utils.parseUser(data));
+    }, instance, params, options, secret);
 }
 export function updateUserScore(opt, instance, params, callback, options, secret) {
-    if (!instance.account && (!params.accountID || !params.gjp2)) throw new Error("Must authenticate with account")
-    const demons = opt.demons || opt.completedDemons.length
-    const dinfo = opt.completedDemons.join(",")
-    const sinfo = `${opt.classic.auto},${opt.classic.easy},${opt.classic.normal},${opt.classic.hard},${opt.classic.harder},${opt.classic.insane},${opt.platformer.auto},${opt.platformer.easy},${opt.platformer.normal},${opt.platformer.hard},${opt.platformer.harder},${opt.platformer.insane}`
-    let icon = opt.cubeID
+    if (!instance.account && (!params.accountID || !params.gjp2)) throw new Error("Must authenticate with account");
+    const demons = opt.demons || opt.completedDemons.length;
+    const dinfo = opt.completedDemons.join(",");
+    const sinfo = `${opt.classic.auto},${opt.classic.easy},${opt.classic.normal},${opt.classic.hard},${opt.classic.harder},${opt.classic.insane},${opt.platformer.auto},${opt.platformer.easy},${opt.platformer.normal},${opt.platformer.hard},${opt.platformer.harder},${opt.platformer.insane}`;
+    let icon = opt.cubeID;
     switch (opt.iconType) {
         case 1:
-            icon = opt.shipID
-            break
+            icon = opt.shipID;
+            break;
         case 2:
-            icon = opt.ballID
-            break
+            icon = opt.ballID;
+            break;
         case 3:
-            icon = opt.ufoID
-            break
+            icon = opt.ufoID;
+            break;
         case 4:
-            icon = opt.waveID
-            break
+            icon = opt.waveID;
+            break;
         case 5:
-            icon = opt.robotID
-            break
+            icon = opt.robotID;
+            break;
         case 6:
-            icon = opt.spiderID
-            break
+            icon = opt.spiderID;
+            break;
         case 7:
-            icon = opt.swingID
-            break
+            icon = opt.swingID;
+            break;
         case 8:
-            icon = opt.jetpackID
-            break
+            icon = opt.jetpackID;
+            break;
     }
     genericRequest("updateUserScore", {
         accountID: instance.account.accountID,
@@ -117,8 +117,8 @@ export function updateUserScore(opt, instance, params, callback, options, secret
             opt.completedGauntletNonDemons
         ], constants.KEYS.STAT_SUBMISSION, constants.SALTS.STAT_SUBMISSION)
     }, function(data) {
-        callback(Number(data))
-    }, instance, params, options, secret)
+        callback(Number(data));
+    }, instance, params, options, secret);
 }
 export function updateAccountSettings(mS, frS, cS, youtube, twitch, twitter, instance, params, callback, options, secret) {
     genericRequest("updateAccountSettings", {
@@ -129,7 +129,7 @@ export function updateAccountSettings(mS, frS, cS, youtube, twitch, twitter, ins
         twitter,
         twitch
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        else callback(data)
-    }, instance, params, options, secret || constants.SECRETS.ACCOUNT)
+        if (data == -1) throw new Error(-1);
+        else callback(data);
+    }, instance, params, options, secret || constants.SECRETS.ACCOUNT);
 }

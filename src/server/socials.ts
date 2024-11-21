@@ -1,6 +1,6 @@
-import { genericRequest } from "./generic.js"
-import * as constants from "../constants.js"
-import * as utils from "../utils.js"
+import { genericRequest } from "./generic.js";
+import * as constants from "../constants.js";
+import * as utils from "../utils.js";
 
 export function getUserList(type, instance, params, callback, options, secret) {
     genericRequest("getUserList", {
@@ -8,9 +8,9 @@ export function getUserList(type, instance, params, callback, options, secret) {
         gjp2: utils.gjp2(instance.account.password),
         type
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(data.split("|").map(e => utils.parseUser(e)))
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(data.split("|").map(e => utils.parseUser(e)));
+    }, instance, params, options, secret);
 }
 export function getMessages(page, type, instance, params, callback, options, secret) {
     genericRequest("getMessages", {
@@ -20,17 +20,17 @@ export function getMessages(page, type, instance, params, callback, options, sec
         getSent: type,
         total: 0
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        const segments = data.split("#")
-        const messages = segments[0].split("|").map(m => utils.parseMessage(m))
-        const pages = segments[1].split(":")
+        if (data == -1) throw new Error(-1);
+        const segments = data.split("#");
+        const messages = segments[0].split("|").map(m => utils.parseMessage(m));
+        const pages = segments[1].split(":");
         callback({
             messages,
             total: Number(pages[0]),
             offset: Number(pages[1]),
             pageSize: Number(pages[2])
-        })
-    }, instance, params, options, secret)
+        });
+    }, instance, params, options, secret);
 }
 export function readMessage(messageID, isSender, instance, params, callback, options, secret) {
     genericRequest("readMessage", {
@@ -39,9 +39,9 @@ export function readMessage(messageID, isSender, instance, params, callback, opt
         messageID,
         isSender: Number(!!isSender)
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(utils.parseMessage(data))
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(utils.parseMessage(data));
+    }, instance, params, options, secret);
 }
 export function sendMessage(accountID, subject, body, instance, params, callback, options, secret) {
     genericRequest("sendMessage", {
@@ -51,9 +51,9 @@ export function sendMessage(accountID, subject, body, instance, params, callback
         subject: utils.base64Encode(subject),
         body: utils.base64Encode(utils.xor(body, constants.KEYS.MESSAGES)),
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(data)
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(data);
+    }, instance, params, options, secret);
 }
 export function deleteMessage(id, isSender, instance, params, callback, options, secret) {
     genericRequest("deleteMessage", {
@@ -62,9 +62,9 @@ export function deleteMessage(id, isSender, instance, params, callback, options,
         messageID: id,
         isSender: Number(!!isSender)
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(data)
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(data);
+    }, instance, params, options, secret);
 }
 export function blockUser(accountID, instance, params, callback, options, secret) {
     genericRequest("blockUser", {
@@ -72,9 +72,9 @@ export function blockUser(accountID, instance, params, callback, options, secret
         gjp2: utils.gjp2(instance.account.password),
         targetAccountID: accountID
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(data)
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(data);
+    }, instance, params, options, secret);
 }
 export function unblockUser(accountID, instance, params, callback, options, secret) {
     genericRequest("unblockUser", {
@@ -82,9 +82,9 @@ export function unblockUser(accountID, instance, params, callback, options, secr
         gjp2: utils.gjp2(instance.account.password),
         targetAccountID: accountID
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(data)
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(data);
+    }, instance, params, options, secret);
 }
 export function deleteFriendRequests(accountIDs, isSender, instance, params, callback, options, secret) {
     genericRequest("deleteFriendRequests", {
@@ -94,9 +94,9 @@ export function deleteFriendRequests(accountIDs, isSender, instance, params, cal
         accounts: (typeof accountIDs == "number" ? undefined : accountIDs.join(",")),
         isSender: Number(!!isSender)
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(data)
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(data);
+    }, instance, params, options, secret);
 }
 export function sendFriendRequest(accountID, comment, instance, params, callback, options, secret) {
     genericRequest("sendFriendRequest", {
@@ -105,9 +105,9 @@ export function sendFriendRequest(accountID, comment, instance, params, callback
         toAccountID: accountID,
         comment: utils.base64Encode(comment)
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(data)
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(data);
+    }, instance, params, options, secret);
 }
 export function getFriendRequests(page, type, instance, params, callback, options, secret) {
     genericRequest("getFriendRequests", {
@@ -117,17 +117,17 @@ export function getFriendRequests(page, type, instance, params, callback, option
         getSent: type,
         total: 0
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        const segments = data.split("#")
-        const friendRequests = segments[0].split("|").map(m => utils.parseUser(m))
-        const pages = segments[1].split(":")
+        if (data == -1) throw new Error(-1);
+        const segments = data.split("#");
+        const friendRequests = segments[0].split("|").map(m => utils.parseUser(m));
+        const pages = segments[1].split(":");
         callback({
             friendRequests,
             total: Number(pages[0]),
             offset: Number(pages[1]),
             pageSize: Number(pages[2])
-        })
-    }, instance, params, options, secret)
+        });
+    }, instance, params, options, secret);
 }
 export function readFriendRequest(requestID, instance, params, callback, options, secret) {
     genericRequest("readFriendRequest", {
@@ -135,9 +135,9 @@ export function readFriendRequest(requestID, instance, params, callback, options
         gjp2: utils.gjp2(instance.account.password),
         requestID
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(data)
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(data);
+    }, instance, params, options, secret);
 }
 export function acceptFriendRequest(requestID, targetAccountID, instance, params, callback, options, secret) {
     genericRequest("acceptFriendRequest", {
@@ -146,9 +146,9 @@ export function acceptFriendRequest(requestID, targetAccountID, instance, params
         requestID,
         targetAccountID
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(data)
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(data);
+    }, instance, params, options, secret);
 }
 export function removeFriend(targetAccountID, instance, params, callback, options, secret) {
     genericRequest("removeFriend", {
@@ -156,7 +156,7 @@ export function removeFriend(targetAccountID, instance, params, callback, option
         gjp2: utils.gjp2(instance.account.password),
         targetAccountID
     }, function(data) {
-        if (data == -1) throw new Error(-1)
-        callback(data)
-    }, instance, params, options, secret)
+        if (data == -1) throw new Error(-1);
+        callback(data);
+    }, instance, params, options, secret);
 }
