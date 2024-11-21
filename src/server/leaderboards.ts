@@ -4,9 +4,9 @@ import * as utils from "../utils.js"
 
 export function getLeaderboards(type, instance, params, callback, options, secret) {
     genericRequest("getLeaderboards", {type}, function(data) {
-        let dr = data.split("|")
-        let d = dr.filter(e => !!e)
-        let users = d.map(u => utils.parseUser(u))
+        const dr = data.split("|")
+        const d = dr.filter(e => !!e)
+        const users = d.map(u => utils.parseUser(u))
         callback({
             users,
             emptyUsers: dr.length - d.length
@@ -14,10 +14,10 @@ export function getLeaderboards(type, instance, params, callback, options, secre
     }, instance, params, options, secret)
 }
 export function getLevelScores(levelID, type, opts, instance, params, callback, options, secret) {
-    let s1 = (opts.attempts || 0) + 8354
-    let s2 = (opts.bestAttemptClicks || 0) + 3991
-    let s3 = (opts.bestAttemptTime || 0) + 4085
-    let s4 = utils.generateLeaderboardSeed((opts.bestAttemptClicks || 0), (opts.percentage || 0), (opts.bestAttemptTime || 0), 1)
+    const s1 = (opts.attempts || 0) + 8354
+    const s2 = (opts.bestAttemptClicks || 0) + 3991
+    const s3 = (opts.bestAttemptTime || 0) + 4085
+    const s4 = utils.generateLeaderboardSeed((opts.bestAttemptClicks || 0), (opts.percentage || 0), (opts.bestAttemptTime || 0), 1)
     let s6 = "0"
     if (opts.percentages)
         s6 = opts.percentages.map((v, i, a) => {
@@ -26,11 +26,11 @@ export function getLevelScores(levelID, type, opts, instance, params, callback, 
             return v - prev
         }).join(",")
     console.log(s6)
-    let s7 = utils.rs(10)
-    let s9 = (opts.coins || 0) + 5819
+    const s7 = utils.rs(10)
+    const s9 = (opts.coins || 0) + 5819
 
     // accountID,levelID,percentage,bestAttemptTime,bestAttemptClicks,attempts,levelSeed,pbDiffs,1,coins,timelyID
-    let values = [
+    const values = [
         instance.account.accountID, 
         levelID, 
         (opts.percentage || 0),
@@ -43,8 +43,8 @@ export function getLevelScores(levelID, type, opts, instance, params, callback, 
         (opts.coins || 0), 
         (opts.timelyID || 0)
     ]
-    let chk = utils.chk(values, constants.KEYS.LEVEL_LEADERBOARD, constants.SALTS.LEVEL_LEADERBOARDS + s7)
-    let percentage = opts.percentage
+    const chk = utils.chk(values, constants.KEYS.LEVEL_LEADERBOARD, constants.SALTS.LEVEL_LEADERBOARDS + s7)
+    const percentage = opts.percentage
     opts = {
         time: 0,
         points: 0,
@@ -68,7 +68,7 @@ export function getLevelScores(levelID, type, opts, instance, params, callback, 
     if (percentage) opts.percent = percentage
     genericRequest("getLevelLeaderboards", opts, function(data) {
         if (data == -1 || data == "-01") throw new Error(data)
-            let scores = data.split("|").map(u => utils.parseUser(u))
+            const scores = data.split("|").map(u => utils.parseUser(u))
             for (let i = 0; i < scores.length; i++) {
                 scores[i].percentage = scores[i].stars
                 delete scores[i].stars
@@ -85,10 +85,10 @@ export function getPlatformerLevelScores(levelID, type, mode, opts, instance, pa
         else
             bestAttemptTime = 0
     }
-    let s1 = (opts.attempts || 0) + 8354
-    let s2 = (opts.bestAttemptClicks || 0) + 3991
-    let s3 = bestAttemptTime + 4085
-    let s4 = utils.generatePlatformerLeaderboardSeed((opts.time || 0), (opts.points || 0))
+    const s1 = (opts.attempts || 0) + 8354
+    const s2 = (opts.bestAttemptClicks || 0) + 3991
+    const s3 = bestAttemptTime + 4085
+    const s4 = utils.generatePlatformerLeaderboardSeed((opts.time || 0), (opts.points || 0))
     let s6 = "0"
     if (opts.percentages)
         s6 = opts.percentages.map((v, i, a) => {
@@ -97,11 +97,11 @@ export function getPlatformerLevelScores(levelID, type, mode, opts, instance, pa
             return v - prev
         }).join(",")
     console.log(s6)
-    let s7 = utils.rs(10)
-    let s9 = (opts.coins || 0) + 5819
+    const s7 = utils.rs(10)
+    const s9 = (opts.coins || 0) + 5819
 
     // accountID,levelID,percentage,bestAttemptTime,bestAttemptClicks,attempts,levelSeed,pbDiffs,1,coins,timelyID
-    let values = [
+    const values = [
         instance.account.accountID, 
         levelID, 
         (opts.percentage || 0),
@@ -114,8 +114,8 @@ export function getPlatformerLevelScores(levelID, type, mode, opts, instance, pa
         (opts.coins || 0), 
         (opts.timelyID || 0)
     ]
-    let chk = utils.chk(values, constants.KEYS.LEVEL_LEADERBOARD, constants.SALTS.LEVEL_LEADERBOARDS + s7)
-    let percentage = opts.percentage || 0
+    const chk = utils.chk(values, constants.KEYS.LEVEL_LEADERBOARD, constants.SALTS.LEVEL_LEADERBOARDS + s7)
+    const percentage = opts.percentage || 0
     if (s6 == "0") s6 = percentage
     opts = {
         time: (opts.time || 0),
@@ -140,7 +140,7 @@ export function getPlatformerLevelScores(levelID, type, mode, opts, instance, pa
     if (percentage) opts.percent = percentage
     genericRequest("getPlatformerLevelLeaderboards", opts, function(data) {
         if (data == -1 || data == "-01") throw new Error(data)
-        let scores = data.split("|").map(u => utils.parseUser(u))
+        const scores = data.split("|").map(u => utils.parseUser(u))
         for (let i = 0; i < scores.length; i++) {
             if (mode == 0) scores[i].time = scores[i].stars
             else scores[i].points = scores[i].stars

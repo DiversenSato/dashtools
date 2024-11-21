@@ -15,7 +15,7 @@ export const constants = c
 
 export class GDAccount {
     constructor(playerID, accountID, password, username, udid) {
-        let digits = "1234567890".split("")
+        const digits = "1234567890".split("")
 
         this.playerID = playerID || 0
         this.accountID = accountID || 0
@@ -454,4 +454,4 @@ export class GDClient {
         songs.getSFXLibrary(this, params, callback, options)
     }
 }
-export let utils = u
+export const utils = u

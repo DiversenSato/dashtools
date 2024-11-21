@@ -14,13 +14,13 @@ export function getRewards(type, instance, params, callback, options, secret) {
         gjp2: utils.gjp2(instance.account.password)
     }, function(data) {
         if (data == -1) throw new Error(-1)
-        let segments = data.split("|")
-        let infoRaw = segments[0].slice(5)
-        let info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHEST_REWARDS).split(":")
-        let startString = segments[0].slice(0, 5)
-        let small = info[6].split(",")
-        let big = info[9].split(",")
-        let hash = segments[1]
+        const segments = data.split("|")
+        const infoRaw = segments[0].slice(5)
+        const info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHEST_REWARDS).split(":")
+        const startString = segments[0].slice(0, 5)
+        const small = info[6].split(",")
+        const big = info[9].split(",")
+        const hash = segments[1]
         console.log(utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHEST_REWARDS))
         callback({
             randomString1: startString,
@@ -61,14 +61,14 @@ export function getChallenges(instance, params, callback, options, secret) {
         gjp2: utils.gjp2(instance.account.password)
     }, function(data) {
         if (data == -1) throw new Error(-1)
-        let segments = data.split("|")
-        let infoRaw = segments[0].slice(5)
-        let info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHALLENGES).split(":")
-        let startString = segments[0].slice(0, 5)
-        let quest1 = info[6].split(",")
-        let quest2 = info[7].split(",")
-        let quest3 = info[8].split(",")
-        let hash = segments[1]
+        const segments = data.split("|")
+        const infoRaw = segments[0].slice(5)
+        const info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHALLENGES).split(":")
+        const startString = segments[0].slice(0, 5)
+        const quest1 = info[6].split(",")
+        const quest2 = info[7].split(",")
+        const quest3 = info[8].split(",")
+        const hash = segments[1]
         callback({
             randomString1: startString,
             randomString2: info[0],

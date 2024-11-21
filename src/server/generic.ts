@@ -17,7 +17,7 @@ export function genericRequest(endpoint, paramsInternal, callbackInternal, insta
         ...paramsInternal,
         ...params
     }
-    let hostElem = instance.server.replace("https://", "").replace("http://", "").split("/")[0]
+    const hostElem = instance.server.replace("https://", "").replace("http://", "").split("/")[0]
 
     // console.log(opts)
     axios.default.post(`${instance.server}/${instance.endpoints[endpoint]}`, opts, {
@@ -48,7 +48,7 @@ export function accountRequest(endpoint, paramsInternal, callbackInternal, insta
         ...paramsInternal,
         ...params
     }
-    let hostElem = instance.accountServer.replace("https://", "").replace("http://", "").split("/")[0]
+    const hostElem = instance.accountServer.replace("https://", "").replace("http://", "").split("/")[0]
 
     // console.log(opts)
     axios.default.post(`${instance.accountServer}/${instance.endpoints[endpoint]}`, opts, {
@@ -65,14 +65,14 @@ export function accountRequest(endpoint, paramsInternal, callbackInternal, insta
     })
 }
 export function contentRequest(endpoint, paramsInternal, callbackInternal, instance, params, options) {
-    let expires = Math.floor(Date.now() / 1000) + 3600
-    let opts = {
+    const expires = Math.floor(Date.now() / 1000) + 3600
+    const opts = {
         expires,
         token: utils.generateCDNToken("/" + endpoint.replace(/$\//, ""), expires),
         ...paramsInternal,
         ...params
     }
-    let hostElem = instance.contentServer.replace("https://", "").replace("http://", "").split("/")[0]
+    const hostElem = instance.contentServer.replace("https://", "").replace("http://", "").split("/")[0]
     let path = instance.endpoints[endpoint]
     if (!path) path = endpoint
 

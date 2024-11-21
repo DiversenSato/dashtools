@@ -21,9 +21,9 @@ export function getMessages(page, type, instance, params, callback, options, sec
         total: 0
     }, function(data) {
         if (data == -1) throw new Error(-1)
-        let segments = data.split("#")
-        let messages = segments[0].split("|").map(m => utils.parseMessage(m))
-        let pages = segments[1].split(":")
+        const segments = data.split("#")
+        const messages = segments[0].split("|").map(m => utils.parseMessage(m))
+        const pages = segments[1].split(":")
         callback({
             messages,
             total: Number(pages[0]),
@@ -118,9 +118,9 @@ export function getFriendRequests(page, type, instance, params, callback, option
         total: 0
     }, function(data) {
         if (data == -1) throw new Error(-1)
-        let segments = data.split("#")
-        let friendRequests = segments[0].split("|").map(m => utils.parseUser(m))
-        let pages = segments[1].split(":")
+        const segments = data.split("#")
+        const friendRequests = segments[0].split("|").map(m => utils.parseUser(m))
+        const pages = segments[1].split(":")
         callback({
             friendRequests,
             total: Number(pages[0]),

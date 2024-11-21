@@ -4,9 +4,9 @@ import * as utils from "../utils.js"
 
 export function searchUsers(username, instance, params, callback, options, secret) {
     genericRequest("getUsers", {str: username}, function(data) {
-        let segments = data.split("#")
-        let users = segments[0].split("|").map(u => utils.parseUser(u))
-        let pages = segments[1].split(":")
+        const segments = data.split("#")
+        const users = segments[0].split("|").map(u => utils.parseUser(u))
+        const pages = segments[1].split(":")
         callback({
             users,
             total: Number(pages[0]),
@@ -16,7 +16,7 @@ export function searchUsers(username, instance, params, callback, options, secre
     }, instance, params, options, secret)
 }
 export function getUserByAccountID(accountID, logout, instance, params, callback, options, secret) {
-    let auth = {}
+    const auth = {}
     if (instance.account && !logout) {
         auth.accountID = instance.account.accountID
         auth.gjp2 = utils.gjp2(instance.account.password)
@@ -27,9 +27,9 @@ export function getUserByAccountID(accountID, logout, instance, params, callback
 }
 export function updateUserScore(opt, instance, params, callback, options, secret) {
     if (!instance.account && (!params.accountID || !params.gjp2)) throw new Error("Must authenticate with account")
-    let demons = opt.demons || opt.completedDemons.length
-    let dinfo = opt.completedDemons.join(",")
-    let sinfo = `${opt.classic.auto},${opt.classic.easy},${opt.classic.normal},${opt.classic.hard},${opt.classic.harder},${opt.classic.insane},${opt.platformer.auto},${opt.platformer.easy},${opt.platformer.normal},${opt.platformer.hard},${opt.platformer.harder},${opt.platformer.insane}`
+    const demons = opt.demons || opt.completedDemons.length
+    const dinfo = opt.completedDemons.join(",")
+    const sinfo = `${opt.classic.auto},${opt.classic.easy},${opt.classic.normal},${opt.classic.hard},${opt.classic.harder},${opt.classic.insane},${opt.platformer.auto},${opt.platformer.easy},${opt.platformer.normal},${opt.platformer.hard},${opt.platformer.harder},${opt.platformer.insane}`
     let icon = opt.cubeID
     switch (opt.iconType) {
         case 1:

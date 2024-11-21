@@ -5,15 +5,15 @@ import * as utils from "../utils.js"
 export function getSongInfo(songID, instance, params, callback, options, secret) {
     genericRequest("getSongInfo", {songID}, function(data) {
         if (data == -1) throw new Error("Song not found")
-        let d = utils.parseSongs(data)
+        const d = utils.parseSongs(data)
         callback(d[songID] || d)
     }, instance, params, options, secret)
 }
 export function getTopArtists(page, instance, params, callback, options, secret) {
     genericRequest("getTopArtists", {page}, function(d) {
-        let data = d.split("#")
-        let artists = utils.parseArtists(data[0])
-        let pageInfo = data[1].split(":")
+        const data = d.split("#")
+        const artists = utils.parseArtists(data[0])
+        const pageInfo = data[1].split(":")
         callback({
             artists,
             total: Number(pageInfo[0]),

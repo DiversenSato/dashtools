@@ -18,8 +18,8 @@ export function getLevelLists(opts, instance, params, callback, options, secret)
         10: -2
     }
     
-    let auth = {}
-    let diff = {}
+    const auth = {}
+    const diff = {}
     if (opts.difficulty) {
         diff.difficulty = diffMap[opts.difficulty]
         if (opts.difficulty > 5) {
@@ -50,11 +50,11 @@ export function getLevelLists(opts, instance, params, callback, options, secret)
     }
     
     genericRequest("getLists", opts, function(data) {
-        let segments = data.split("#")
-        let lists = segments[0].split("|").map(e => utils.parseList(e))
-        let users = utils.parseUsers(segments[1])
-        let pageInfo = segments[2].split(":")
-        let hash = segments[3]
+        const segments = data.split("#")
+        const lists = segments[0].split("|").map(e => utils.parseList(e))
+        const users = utils.parseUsers(segments[1])
+        const pageInfo = segments[2].split(":")
+        const hash = segments[3]
         callback({
             lists, 
             users,
@@ -67,7 +67,7 @@ export function getLevelLists(opts, instance, params, callback, options, secret)
     }, instance, params, options, secret)
 }
 export function uploadLevelList(opts, instance, params, callback, options, secret) {
-    let seed2 = utils.rs(5)
+    const seed2 = utils.rs(5)
     opts = {
         listID: opts.id || 0,
         listName: opts.name,

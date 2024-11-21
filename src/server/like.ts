@@ -4,8 +4,8 @@ import * as utils from "../utils.js"
 
 export function likeItem(itemID, special, type, like, instance, params, callback, options, secret) {
     if (!instance.account) throw new Error("You must authenticate in order to like/dislike items")
-    let rs = utils.rs(10)
-    let chk = utils.chk([
+    const rs = utils.rs(10)
+    const chk = utils.chk([
         (special || 0), 
         itemID, 
         like, 

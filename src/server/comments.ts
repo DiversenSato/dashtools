@@ -12,9 +12,9 @@ export function getLevelComments(levelID, count, mode, page, instance, params, c
                 pageSize: 0
             })
         } else {
-            let segments = data.split("#")
-            let comments = segments[0].split("|").map(u => utils.parseComment(u))
-            let pages = segments[1].split(":")
+            const segments = data.split("#")
+            const comments = segments[0].split("|").map(u => utils.parseComment(u))
+            const pages = segments[1].split(":")
             callback({
                 comments,
                 total: Number(pages[0]),
@@ -26,9 +26,9 @@ export function getLevelComments(levelID, count, mode, page, instance, params, c
 }
 export function getCommentHistory(playerID, count, mode, page, instance, params, callback, options, secret) {
     genericRequest("getCommentHistory", {userID: playerID, count, mode, page}, function(data) {
-        let segments = data.split("#")
-        let comments = segments[0].split("|").map(u => utils.parseComment(u))
-        let pages = segments[1].split(":")
+        const segments = data.split("#")
+        const comments = segments[0].split("|").map(u => utils.parseComment(u))
+        const pages = segments[1].split(":")
         console.log(data)
         callback({
             comments,
@@ -39,7 +39,7 @@ export function getCommentHistory(playerID, count, mode, page, instance, params,
     }, instance, params, options, secret)
 }
 export function uploadProfilePost(content, instance, params, callback, options, secret) {
-    let extras = {}
+    const extras = {}
     if (instance.account.username) {
         extras.userName = instance.account.username
         extras.chk = utils.chk([extras.userName, utils.base64Encode(content), 0, 0, 1], constants.KEYS.COMMENT, constants.SALTS.COMMENT)
@@ -70,7 +70,7 @@ export function deleteProfilePost(id, accountID, instance, params, callback, opt
 }
 export function uploadComment(levelID, content, percentage, instance, params, callback, options, secret) {
     if (!instance.account.username) throw new Error("Must specify account username")
-    let chk = utils.chk([instance.account.username, utils.base64Encode(content), levelID, percentage, 0], constants.KEYS.COMMENT, constants.SALTS.COMMENT)
+    const chk = utils.chk([instance.account.username, utils.base64Encode(content), levelID, percentage, 0], constants.KEYS.COMMENT, constants.SALTS.COMMENT)
     genericRequest("uploadComment", {
         levelID, 
         comment: utils.base64Encode(content), 

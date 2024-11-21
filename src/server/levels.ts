@@ -33,9 +33,9 @@ export function getLevels(params, instance, opts, callback, options, secret) {
         else len = constants.LENGTHS[params.length]
     }
 
-    let diff = {}
+    const diff = {}
     if (params.difficulties && params.difficulties.length > 0) {
-        let diffs = params.difficulties.map(d => diffMap[d] || 0)
+        const diffs = params.difficulties.map(d => diffMap[d] || 0)
         if (params.difficulties.length > 1) {
             if (diffs.includes(-2)) throw new Error("Only one demon difficulty can be searched at a time")
             diff.diff = Array.from(new Set(diffs)).join(",")
@@ -51,7 +51,7 @@ export function getLevels(params, instance, opts, callback, options, secret) {
     else if (params.type == 10 || params.type == 19) str = params.levelIDs.join(",")
     else if (params.type == 25) str = params.listID
 
-    let auth = {}
+    const auth = {}
     if (params.type == 13) {
         if (!instance.account) throw new Error("Must be authorized to get friend levels")
         auth.accountID = instance.account.accountID
@@ -82,9 +82,9 @@ export function getLevels(params, instance, opts, callback, options, secret) {
         ...auth
     }
     genericRequest("getLevels", params, function(data) {
-        let date = Date.now()
-        let segments = data.split("#")
-        let levels = segments[0].split("|").map(l => utils.parseLevel(l))
+        const date = Date.now()
+        const segments = data.split("#")
+        const levels = segments[0].split("|").map(l => utils.parseLevel(l))
         let songs
         let users
         let pages
@@ -126,12 +126,12 @@ export function getDailyLevel(instance, params, callback, options, secret) {
 }
 export function getMapPacks(instance, params, callback, options, secret) {
     genericRequest("getMapPacks", {}, function(data) {
-        let segments = data.split("#")
-        let packsRaw = segments[0].split("|")
-        let pages = segments[1].split(":")
-        let hash = segments[2]
-        let packs = []
-        for (let pack of packsRaw) {
+        const segments = data.split("#")
+        const packsRaw = segments[0].split("|")
+        const pages = segments[1].split(":")
+        const hash = segments[2]
+        const packs = []
+        for (const pack of packsRaw) {
             packs.push(utils.parseMapPack(pack))
         }
         callback({
@@ -146,10 +146,10 @@ export function getMapPacks(instance, params, callback, options, secret) {
 }
 export function getGauntlets(instance, params, callback, options, secret) {
     genericRequest("getGauntlets", {special: 1}, function(data) {
-        let segments = data.split("#")
-        let packsRaw = segments[0].split("|")
-        let hash = segments[1]
-        let packs = []
+        const segments = data.split("#")
+        const packsRaw = segments[0].split("|")
+        const hash = segments[1]
+        const packs = []
         for (let pack of packsRaw) {
             pack = utils.robTopSplit(pack, ":")
             packs.push({
@@ -165,7 +165,7 @@ export function getGauntlets(instance, params, callback, options, secret) {
     }, instance, params, options, secret)
 }
 export function downloadLevel(levelID, instance, params, callback, options, secret) {
-    let creds = {}
+    const creds = {}
     let opt = {
         levelID
     }
@@ -194,12 +194,12 @@ export function downloadLevel(levelID, instance, params, callback, options, secr
         ...creds
     }
     genericRequest("downloadLevel", opt, function(data) {
-        let segments = data.split("#")
+        const segments = data.split("#")
         let func = utils.parseLevel
         if (instance.versions.gameVersion < 20) func = utils.parseLevelOld
-        let level = func(segments[0])
-        let hashes = segments.slice(1, 3)
-        let json = {
+        const level = func(segments[0])
+        const hashes = segments.slice(1, 3)
+        const json = {
             level,
             hashes,
             isHash1Valid: utils.generateDownloadHash(level.levelString) == hashes[0],
@@ -231,8 +231,8 @@ export function reportLevel(levelID, instance, params, callback, options, secret
 // }
 export function rateLevel(levelID, stars, instance, params, callback, options, secret) {
     if (!instance.account) throw new Error("You must authenticate in order to send rate suggestions for levels")
-    let rs = utils.rs(10)
-    let chk = utils.chk([
+    const rs = utils.rs(10)
+    const chk = utils.chk([
         levelID,
         stars,
         rs,
@@ -268,8 +268,8 @@ export function updateDescription(levelID, description, instance, params, callba
 }
 export function uploadLevel(opts, instance, params, callback, options, secret) {
     if (!instance.account) throw new Error("You must authenticate in order to upload a level")
-    let seed2 = utils.generateUploadSeed2(opts.levelString)
-    let song = {}
+    const seed2 = utils.generateUploadSeed2(opts.levelString)
+    const song = {}
     if (opts.songIDs) song.songIDs = opts.songIDs.join(",")
     if (opts.sfxIDs) song.sfxIDs = opts.sfxIDs.join(",")
     opts = {

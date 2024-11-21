@@ -71,12 +71,12 @@ export function loadSaveData(instance, params, callback, options, secret) {
         uuid: instance.account.playerID,
         udid: instance.account.udid
     }, function(data) {
-        let elements = data.split(";")
-        let ratedLevels = utils.robTopSplitDict(utils.tryUnzip(utils.base64DecodeBuffer(elements[4].slice(20, elements[4].length - 20))), ",")
-        for (let i of Object.keys(ratedLevels)) {
+        const elements = data.split(";")
+        const ratedLevels = utils.robTopSplitDict(utils.tryUnzip(utils.base64DecodeBuffer(elements[4].slice(20, elements[4].length - 20))), ",")
+        for (const i of Object.keys(ratedLevels)) {
             ratedLevels[i] = Number(ratedLevels[i])
         }
-        let mappacks = elements[5]
+        const mappacks = elements[5]
         callback({
             gameManager: elements[0],
             localLevels: elements[1],
