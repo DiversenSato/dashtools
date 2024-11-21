@@ -1,10 +1,11 @@
 {
   "name": "dashtools",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Library for interacting with Geometry Dash servers",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src"
   },
   "dependencies": {
     "axios": "^1.6.8"
@@ -20,5 +21,11 @@
     "geometry-dash",
     "gd",
     "robtop"
-  ]
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "eslint": "^9.15.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.15.0"
+  }
 }
