@@ -32,7 +32,7 @@ export interface GetRewardResult {
     isHashValid: boolean;
 }
 
-export function getRewards(type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetRewardResult) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getRewards(type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetRewardResult) => void, options?: AxiosRequestConfig) {
     genericRequest("getRewards", {
         chk: `${utils.rs(5)}${utils.base64Encode(utils.xor(utils.getRandomNumber(10000, 1000000).toString(), constants.KEYS.CHEST_REWARDS))}`,
         rewardType: type,
@@ -79,7 +79,7 @@ export function getRewards(type: number, instance: GDClient, params: GenericRequ
             hash,
             isHashValid: utils.sha1(`${infoRaw}${constants.SALTS.REWARDS}`) == hash,
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface GetChallengesResult {
@@ -101,7 +101,7 @@ export interface GetChallengesResult {
     isHashValid: boolean;
 }
 
-export function getChallenges(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetChallengesResult) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getChallenges(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetChallengesResult) => void, options?: AxiosRequestConfig) {
     genericRequest("getChallenges", {
         chk: `${utils.rs(5)}${utils.base64Encode(utils.xor(utils.getRandomNumber(10000, 1000000).toString(), constants.KEYS.CHALLENGES))}`,
         udid: instance.account.udid,
@@ -140,5 +140,5 @@ export function getChallenges(instance: GDClient, params: GenericRequestOptions 
             hash,
             isHashValid: utils.sha1(`${infoRaw}${constants.SALTS.CHALLENGES}`) == hash
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }

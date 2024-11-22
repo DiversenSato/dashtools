@@ -58,232 +58,232 @@ export class GDClient {
         this.versions = versions || c.VERSIONS;
         this.account = account || new GDAccount();
     }
-    likeItem(itemID: number, special: number, type: likes.ContentType, like: 0 | 1, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        likes.likeItem(itemID, special, type, like, this, params, callback, options, secret);
+    likeItem(itemID: number, special: number, type: likes.ContentType, like: 0 | 1, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        likes.likeItem(itemID, special, type, like, this, params, callback, options);
     }
-    likeLevel(levelID: number, like: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        likes.likeItem(levelID, 0, 1, like ? 1 : 0, this, params, callback, options, secret);
+    likeLevel(levelID: number, like: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        likes.likeItem(levelID, 0, 1, like ? 1 : 0, this, params, callback, options);
     }
-    likeComment(commentID: number, levelID: number, like: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        likes.likeItem(commentID, levelID, 2, like ? 1 : 0, this, params, callback, options, secret);
+    likeComment(commentID: number, levelID: number, like: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        likes.likeItem(commentID, levelID, 2, like ? 1 : 0, this, params, callback, options);
     }
-    likeAccountPost(postID: number, accountID: number, like: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        likes.likeItem(postID, accountID, 3, like ? 1 : 0, this, params, callback, options, secret);
+    likeAccountPost(postID: number, accountID: number, like: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        likes.likeItem(postID, accountID, 3, like ? 1 : 0, this, params, callback, options);
     }
-    likeList(listID: number, like: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        likes.likeItem(listID, 0, 4, like ? 1 : 0, this, params, callback, options, secret);
+    likeList(listID: number, like: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        likes.likeItem(listID, 0, 4, like ? 1 : 0, this, params, callback, options);
     }
-    rateLevel(levelID: number, stars: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.rateLevel(levelID, stars, this, params, callback, options, secret);
+    rateLevel(levelID: number, stars: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.rateLevel(levelID, stars, this, params, callback, options);
     }
-    rateDemon(levelID: number, rating: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.rateDemon(levelID, rating, this, params, callback, options, secret);
+    rateDemon(levelID: number, rating: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.rateDemon(levelID, rating, this, params, callback, options);
     }
-    getLevelComments(levelID: number, count: number, mode: number, page: number, callback: (data: comments.CommentResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        comments.getLevelComments(levelID, count, mode, page, this, params, callback, options, secret);
+    getLevelComments(levelID: number, count: number, mode: number, page: number, callback: (data: comments.CommentResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        comments.getLevelComments(levelID, count, mode, page, this, params, callback, options);
     }
-    getCommentHistory(playerID: number, count: number, mode: number, page: number, callback: (data: comments.CommentResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        comments.getCommentHistory(playerID, count, mode, page, this, params, callback, options, secret);
+    getCommentHistory(playerID: number, count: number, mode: number, page: number, callback: (data: comments.CommentResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        comments.getCommentHistory(playerID, count, mode, page, this, params, callback, options);
     }
-    uploadComment(levelID: number, content: string, percentage: number, callback: (data: string | true) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        comments.uploadComment(levelID, content, percentage, this, params, callback, options, secret);
+    uploadComment(levelID: number, content: string, percentage: number, callback: (data: string | true) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        comments.uploadComment(levelID, content, percentage, this, params, callback, options);
     }
-    deleteComment(levelID: number, commentID: number, callback: (data: string | true) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        comments.deleteComment(levelID, commentID, this, params, callback, options, secret);
+    deleteComment(levelID: number, commentID: number, callback: (data: string | true) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        comments.deleteComment(levelID, commentID, this, params, callback, options);
     }
-    // getProfilePosts(accountID: number, page: number, total: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-    //     comments.getProfilePosts(accountID, page, total, this, params, callback, options, secret);
+    // getProfilePosts(accountID: number, page: number, total: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+    //     comments.getProfilePosts(accountID, page, total, this, params, callback, options);
     // }
-    uploadProfilePost(content: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        comments.uploadProfilePost(content, this, params, callback, options, secret);
+    uploadProfilePost(content: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        comments.uploadProfilePost(content, this, params, callback, options);
     }
-    deleteProfilePost(id: number, accountID: number, callback: (data: string | true) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        comments.deleteProfilePost(id, accountID, this, params, callback, options, secret);
+    deleteProfilePost(id: number, accountID: number, callback: (data: string | true) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        comments.deleteProfilePost(id, accountID, this, params, callback, options);
     }
-    getLevels(opts: levels.GetLevelsOptions, callback: () => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels(opts, this, params, callback, options, secret);
+    getLevels(opts: levels.GetLevelsOptions, callback: () => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels(opts, this, params, callback, options);
     }
-    getLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists(opts, this, params, callback, options, secret);
+    getLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists(opts, this, params, callback, options);
     }
-    getMostDownloadedLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 1, ...opts }, this, params, callback, options, secret);
+    getMostDownloadedLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 1, ...opts }, this, params, callback, options);
     }
-    getMostDownloadedLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 1, ...opts }, this, params, callback, options, secret);
+    getMostDownloadedLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 1, ...opts }, this, params, callback, options);
     }
-    getMostLikedLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 2, ...opts }, this, params, callback, options, secret);
+    getMostLikedLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 2, ...opts }, this, params, callback, options);
     }
-    getMostLikedLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 2, ...opts }, this, params, callback, options, secret);
+    getMostLikedLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 2, ...opts }, this, params, callback, options);
     }
-    getTrendingLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 3, ...opts }, this, params, callback, options, secret);
+    getTrendingLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 3, ...opts }, this, params, callback, options);
     }
-    getTrendingLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 3, ...opts }, this, params, callback, options, secret);
+    getTrendingLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 3, ...opts }, this, params, callback, options);
     }
-    getRecentLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 4, ...opts }, this, params, callback, options, secret);
+    getRecentLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 4, ...opts }, this, params, callback, options);
     }
-    getRecentLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 4, ...opts }, this, params, callback, options, secret);
+    getRecentLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 4, ...opts }, this, params, callback, options);
     }
-    getFeaturedLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 6, ...opts }, this, params, callback, options, secret);
+    getFeaturedLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 6, ...opts }, this, params, callback, options);
     }
-    getTopLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 6, ...opts }, this, params, callback, options, secret);
+    getTopLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 6, ...opts }, this, params, callback, options);
     }
-    getMagicLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 7, ...opts }, this, params, callback, options, secret);
+    getMagicLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 7, ...opts }, this, params, callback, options);
     }
-    getMagicLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 7, ...opts }, this, params, callback, options, secret);
+    getMagicLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 7, ...opts }, this, params, callback, options);
     }
-    getSentLevelsOld(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 8, ...opts }, this, params, callback, options, secret);
+    getSentLevelsOld(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 8, ...opts }, this, params, callback, options);
     }
-    getAwardedLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 11, ...opts }, this, params, callback, options, secret);
+    getAwardedLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 11, ...opts }, this, params, callback, options);
     }
-    getAwardedLevelLists(callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 11 }, this, params, callback, options, secret);
+    getAwardedLevelLists(callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 11 }, this, params, callback, options);
     }
-    getFriendLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 13, ...opts }, this, params, callback, options, secret);
+    getFriendLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 13, ...opts }, this, params, callback, options);
     }
-    getFriendLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 13, ...opts }, this, params, callback, options, secret);
+    getFriendLevelLists(opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 13, ...opts }, this, params, callback, options);
     }
-    getMostLikedWorldLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 15, ...opts }, this, params, callback, options, secret);
+    getMostLikedWorldLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 15, ...opts }, this, params, callback, options);
     }
-    getHallOfFameLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 16, ...opts }, this, params, callback, options, secret);
+    getHallOfFameLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 16, ...opts }, this, params, callback, options);
     }
-    getFeaturedWorldLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 17, ...opts }, this, params, callback, options, secret);
+    getFeaturedWorldLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 17, ...opts }, this, params, callback, options);
     }
-    getOldDailyLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 21, ...opts }, this, params, callback, options, secret);
+    getOldDailyLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 21, ...opts }, this, params, callback, options);
     }
-    getOldWeeklyLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 22, ...opts }, this, params, callback, options, secret);
+    getOldWeeklyLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 22, ...opts }, this, params, callback, options);
     }
-    getLevelsFromList(listID: number, opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 25, listID, ...opts }, this, params, callback, options, secret);
+    getLevelsFromList(listID: number, opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 25, listID, ...opts }, this, params, callback, options);
     }
-    getSentLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getLevels({ type: 27, ...opts }, this, params, callback, options, secret);
+    getSentLevels(opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getLevels({ type: 27, ...opts }, this, params, callback, options);
     }
-    getSentLevelLists(callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 27 }, this, params, callback, options, secret);
+    getSentLevelLists(callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 27 }, this, params, callback, options);
     }
-    getDailyLevel(callback: (data: levels.GetDailyLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getDailyLevel(this, params, callback, options, secret);
+    getDailyLevel(callback: (data: levels.GetDailyLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getDailyLevel(this, params, callback, options);
     }
-    getWeeklyLevel(callback: (data: levels.GetDailyLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getDailyLevel(this, { weekly: 1, ...params }, callback, options, secret);
+    getWeeklyLevel(callback: (data: levels.GetDailyLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getDailyLevel(this, { weekly: 1, ...params }, callback, options);
     }
-    reportLevel(levelID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.reportLevel(levelID, this, params, callback, options, secret);
+    reportLevel(levelID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.reportLevel(levelID, this, params, callback, options);
     }
-    searchLevels(query: string, opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
+    searchLevels(query: string, opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
         levels.getLevels({
             type: 0,
             query,
             ...opts
-        }, this, params, callback, options, secret);
+        }, this, params, callback, options);
     }
-    searchLevelLists(query: string, opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 0, query, ...opts }, this, params, callback, options, secret);
+    searchLevelLists(query: string, opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 0, query, ...opts }, this, params, callback, options);
     }
-    getRatedLevelsByID(levelIDs: number[], opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
+    getRatedLevelsByID(levelIDs: number[], opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
         levels.getLevels({
             type: 10,
             levelIDs,
             ...opts
-        }, this, params, callback, options, secret);
+        }, this, params, callback, options);
     }
-    getLevelsByAccountIDs(accountIDs: number[], opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
+    getLevelsByAccountIDs(accountIDs: number[], opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
         levels.getLevels({
             type: 12,
             accountIDs,
             ...opts
-        }, this, params, callback, options, secret);
+        }, this, params, callback, options);
     }
-    getLevelListsByAccountIDs(accountIDs: string[], opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 12, accountIDs, ...opts }, this, params, callback, options, secret);
+    getLevelListsByAccountIDs(accountIDs: string[], opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 12, accountIDs, ...opts }, this, params, callback, options);
     }
-    getLevelsByPlayerID(playerID: number, opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
+    getLevelsByPlayerID(playerID: number, opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
         levels.getLevels({
             type: 5,
             playerID,
             ...opts
-        }, this, params, callback, options, secret);
+        }, this, params, callback, options);
     }
-    getLevelListsByAccountID(accountID: number, opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.getLevelLists({ type: 5, accountID, ...opts }, this, params, callback, options, secret);
+    getLevelListsByAccountID(accountID: number, opts: lists.GetLevelListsOptions, callback: (data: lists.GetLevelListsResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.getLevelLists({ type: 5, accountID, ...opts }, this, params, callback, options);
     }
-    getLevelsByID(levelIDs: number[], opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
+    getLevelsByID(levelIDs: number[], opts: levels.GetLevelsOptions, callback: (data: levels.GetLevelsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
         levels.getLevels({
             type: 19,
             levelIDs,
             ...opts
-        }, this, params, callback, options, secret);
+        }, this, params, callback, options);
     }
-    getMapPacks(page: number, callback: (data: levels.GetMapPacksResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getMapPacks(this, { page, ...params }, callback, options, secret);
+    getMapPacks(page: number, callback: (data: levels.GetMapPacksResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getMapPacks(this, { page, ...params }, callback, options);
     }
-    getGauntlets(callback: (data: levels.GetGauntlesResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.getGauntlets(this, { ...params }, callback, options, secret);
+    getGauntlets(callback: (data: levels.GetGauntlesResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.getGauntlets(this, { ...params }, callback, options);
     }
-    downloadLevel(id: number, callback: (data: levels.DownloadLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.downloadLevel(id, this, { ...params }, callback, options, secret);
+    downloadLevel(id: number, callback: (data: levels.DownloadLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.downloadLevel(id, this, { ...params }, callback, options);
     }
-    downloadDailyLevel(callback: (data: levels.DownloadLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.downloadLevel(-1, this, { ...params }, callback, options, secret);
+    downloadDailyLevel(callback: (data: levels.DownloadLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.downloadLevel(-1, this, { ...params }, callback, options);
     }
-    downloadWeeklyLevel(callback: (data: levels.DownloadLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.downloadLevel(-2, this, { ...params }, callback, options, secret);
+    downloadWeeklyLevel(callback: (data: levels.DownloadLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.downloadLevel(-2, this, { ...params }, callback, options);
     }
-    downloadEventLevel(callback: (data: levels.DownloadLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.downloadLevel(-3, this, { ...params }, callback, options, secret);
+    downloadEventLevel(callback: (data: levels.DownloadLevelResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.downloadLevel(-3, this, { ...params }, callback, options);
     }
-    getSongInfo(songID: number, callback: (data: u.Song) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        songs.getSongInfo(songID, this, params, callback, options, secret);
+    getSongInfo(songID: number, callback: (data: u.Song) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        songs.getSongInfo(songID, this, params, callback, options);
     }
-    getTopArtists(page: number, callback: (data: songs.ArtisResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        songs.getTopArtists(page, this, params, callback, options, secret);
+    getTopArtists(page: number, callback: (data: songs.ArtisResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        songs.getTopArtists(page, this, params, callback, options);
     }
-    searchUsers(query: string, callback: () => void, params: GenericRequestOptions, options: AxiosRequestConfig, secret?: string) {
-        users.searchUsers(query, this, params, callback, options, secret);
+    searchUsers(query: string, callback: () => void, params: GenericRequestOptions, options: AxiosRequestConfig) {
+        users.searchUsers(query, this, params, callback, options);
     }
-    getUserByAccountID(accountID: number, logout: boolean, callback: (data: u.User) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        users.getUserByAccountID(accountID, logout, this, params, callback, options, secret);
+    getUserByAccountID(accountID: number, logout: boolean, callback: (data: u.User) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        users.getUserByAccountID(accountID, logout, this, params, callback, options);
     }
-    registerAccount(username: string, email: string, password: string, callback: (isSuccess: boolean) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        accounts.registerAccount(username, email, password, this, params, callback, options, secret);
+    registerAccount(username: string, email: string, password: string, callback: (isSuccess: boolean) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        accounts.registerAccount(username, email, password, this, params, callback, options);
     }
-    loginAccount(username: string, password: string, callback: (data: accounts.LoginAccountResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        accounts.loginAccount(username, password, this, params, callback, options, secret);
+    loginAccount(username: string, password: string, callback: (data: accounts.LoginAccountResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        accounts.loginAccount(username, password, this, params, callback, options);
     }
-    getGlobalStarLeaderboards(callback: (data: scores.LeaderboardResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        scores.getLeaderboards(constants.SCORES.TOP, this, params, callback, options, secret);
+    getGlobalStarLeaderboards(callback: (data: scores.LeaderboardResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        scores.getLeaderboards(constants.SCORES.TOP, this, params, callback, options);
     }
-    getRelativeLeaderboards(accountID: number, callback: (data: scores.LeaderboardResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
+    getRelativeLeaderboards(accountID: number, callback: (data: scores.LeaderboardResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
         scores.getLeaderboards(constants.SCORES.RELATIVE, this, {
             accountID,
             ...params
-        }, callback, options, secret);
+        }, callback, options);
     }
-    getFriendLeaderboards(callback: (data: scores.LeaderboardResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        scores.getLeaderboards(constants.SCORES.FRIENDS, this, params, callback, options, secret);
+    getFriendLeaderboards(callback: (data: scores.LeaderboardResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        scores.getLeaderboards(constants.SCORES.FRIENDS, this, params, callback, options);
     }
-    getGlobalCreatorLeaderboards(callback: (data: scores.LeaderboardResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        scores.getLeaderboards(constants.SCORES.CREATORS, this, params, callback, options, secret);
+    getGlobalCreatorLeaderboards(callback: (data: scores.LeaderboardResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        scores.getLeaderboards(constants.SCORES.CREATORS, this, params, callback, options);
     }
     /**
      * Updates your account stats.
@@ -335,116 +335,116 @@ export class GDClient {
      * @param {string} secret The `secret` parameter (uses the correct one for the GD servers by default)
      * @returns {number}
      */
-    updateUserScore(opt: users.UpdateUserOptions, callback: (data: number) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        users.updateUserScore(opt, this, params, callback, options, secret);
+    updateUserScore(opt: users.UpdateUserOptions, callback: (data: number) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        users.updateUserScore(opt, this, params, callback, options);
     }
-    getDailyChests(callback: (data: rewards.GetRewardResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        rewards.getRewards(0, this, params, callback, options, secret);
+    getDailyChests(callback: (data: rewards.GetRewardResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        rewards.getRewards(0, this, params, callback, options);
     }
-    getQuests(callback: (data: rewards.GetChallengesResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        rewards.getChallenges(this, params, callback, options, secret);
+    getQuests(callback: (data: rewards.GetChallengesResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        rewards.getChallenges(this, params, callback, options);
     }
-    requestModAccess(callback: (data: string | false) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        accounts.requestModAccess(this, params, callback, options, secret);
+    requestModAccess(callback: (data: string | false) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        accounts.requestModAccess(this, params, callback, options);
     }
-    updateDescription(levelID: number, desc: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.updateDescription(levelID, desc, this, params, callback, options, secret);
+    updateDescription(levelID: number, desc: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.updateDescription(levelID, desc, this, params, callback, options);
     }
-    uploadLevel(opts: levels.UploadLevelOptions, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.uploadLevel(opts, this, params, callback, options, secret);
+    uploadLevel(opts: levels.UploadLevelOptions, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.uploadLevel(opts, this, params, callback, options);
     }
-    deleteLevel(levelID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        levels.deleteLevel(levelID, this, params, callback, options, secret);
+    deleteLevel(levelID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        levels.deleteLevel(levelID, this, params, callback, options);
     }
-    getUserList(type: number, callback: (data: u.User[]) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.getUserList(type, this, params, callback, options, secret);
+    getUserList(type: number, callback: (data: u.User[]) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.getUserList(type, this, params, callback, options);
     }
-    getFriendsList(callback: (data: u.User[]) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.getUserList(0, this, params, callback, options, secret);
+    getFriendsList(callback: (data: u.User[]) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.getUserList(0, this, params, callback, options);
     }
-    getBlockList(callback: (data: u.User[]) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.getUserList(1, this, params, callback, options, secret);
+    getBlockList(callback: (data: u.User[]) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.getUserList(1, this, params, callback, options);
     }
-    loadSaveData(callback: (data: accounts.SaveData) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        accounts.loadSaveData(this, params, callback, options, secret);
+    loadSaveData(callback: (data: accounts.SaveData) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        accounts.loadSaveData(this, params, callback, options);
     }
-    backupSaveData(gameManager: string, localLevels: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        accounts.backupSaveData(gameManager, localLevels, this, params, callback, options, secret);
+    backupSaveData(gameManager: string, localLevels: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        accounts.backupSaveData(gameManager, localLevels, this, params, callback, options);
     }
-    updateAccountSettings(messagePermissions: string, friendPermissions: string, commentHistoryPermissions: string, youtube: string, twitter: string, twitch: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        users.updateAccountSettings(messagePermissions, friendPermissions, commentHistoryPermissions, youtube, twitter, twitch, this, params, callback, options, secret);
+    updateAccountSettings(messagePermissions: string, friendPermissions: string, commentHistoryPermissions: string, youtube: string, twitter: string, twitch: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        users.updateAccountSettings(messagePermissions, friendPermissions, commentHistoryPermissions, youtube, twitter, twitch, this, params, callback, options);
     }
-    getMessages(page: number, type: number, callback: (data: socials.GetMessagesResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.getMessages(page, type, this, params, callback, options, secret);
+    getMessages(page: number, type: number, callback: (data: socials.GetMessagesResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.getMessages(page, type, this, params, callback, options);
     }
-    getIncomingMessages(page: number, callback: (data: socials.GetMessagesResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.getMessages(page, 0, this, params, callback, options, secret);
+    getIncomingMessages(page: number, callback: (data: socials.GetMessagesResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.getMessages(page, 0, this, params, callback, options);
     }
-    getOutgoingMessages(page: number, callback: (data: socials.GetMessagesResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.getMessages(page, 1, this, params, callback, options, secret);
+    getOutgoingMessages(page: number, callback: (data: socials.GetMessagesResult) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.getMessages(page, 1, this, params, callback, options);
     }
-    readMessage(id: number, isSender: boolean, callback: (data: u.Message) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.readMessage(id, isSender, this, params, callback, options, secret);
+    readMessage(id: number, isSender: boolean, callback: (data: u.Message) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.readMessage(id, isSender, this, params, callback, options);
     }
-    sendMessage(accountID: number, subject: string, body: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.sendMessage(accountID, subject, body, this, params, callback, options, secret);
+    sendMessage(accountID: number, subject: string, body: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.sendMessage(accountID, subject, body, this, params, callback, options);
     }
-    deleteMessage(id: number, isSender: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.deleteMessage(id, isSender, this, params, callback, options, secret);
+    deleteMessage(id: number, isSender: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.deleteMessage(id, isSender, this, params, callback, options);
     }
-    blockUser(accountID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.blockUser(accountID, this, params, callback, options, secret);
+    blockUser(accountID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.blockUser(accountID, this, params, callback, options);
     }
-    unblockUser(accountID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.unblockUser(accountID, this, params, callback, options, secret);
+    unblockUser(accountID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.unblockUser(accountID, this, params, callback, options);
     }
-    getFriendRequests(page: number, type: number, callback: (data: socials.GetFriendRequestsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.getFriendRequests(page, type, this, params, callback, options, secret);
+    getFriendRequests(page: number, type: number, callback: (data: socials.GetFriendRequestsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.getFriendRequests(page, type, this, params, callback, options);
     }
-    getIncomingFriendRequests(page: number, callback: (data: socials.GetFriendRequestsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.getFriendRequests(page, 0, this, params, callback, options, secret);
+    getIncomingFriendRequests(page: number, callback: (data: socials.GetFriendRequestsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.getFriendRequests(page, 0, this, params, callback, options);
     }
-    getOutgoingFriendRequests(page: number, callback: (data: socials.GetFriendRequestsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.getFriendRequests(page, 1, this, params, callback, options, secret);
+    getOutgoingFriendRequests(page: number, callback: (data: socials.GetFriendRequestsResponse) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.getFriendRequests(page, 1, this, params, callback, options);
     }
-    deleteFriendRequests(accountIDs: number[], isSender: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.deleteFriendRequests(accountIDs, isSender, this, params, callback, options, secret);
+    deleteFriendRequests(accountIDs: number[], isSender: boolean, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.deleteFriendRequests(accountIDs, isSender, this, params, callback, options);
     }
-    sendFriendRequest(accountID: number, comment: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.sendFriendRequest(accountID, comment, this, params, callback, options, secret);
+    sendFriendRequest(accountID: number, comment: string, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.sendFriendRequest(accountID, comment, this, params, callback, options);
     }
-    readFriendRequest(requestID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.readFriendRequest(requestID, this, params, callback, options, secret);
+    readFriendRequest(requestID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.readFriendRequest(requestID, this, params, callback, options);
     }
-    acceptFriendRequest(targetAccountID: number, requestID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.acceptFriendRequest(requestID, targetAccountID, this, params, callback, options, secret);
+    acceptFriendRequest(targetAccountID: number, requestID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.acceptFriendRequest(requestID, targetAccountID, this, params, callback, options);
     }
-    removeFriend(targetAccountID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        socials.removeFriend(targetAccountID, this, params, callback, options, secret);
+    removeFriend(targetAccountID: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        socials.removeFriend(targetAccountID, this, params, callback, options);
     }
-    uploadLevelList(opts: lists.UploadLevelListOptions, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.uploadLevelList(opts, this, params, callback, options, secret);
+    uploadLevelList(opts: lists.UploadLevelListOptions, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.uploadLevelList(opts, this, params, callback, options);
     }
-    deleteLevelList(id: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        lists.deleteLevelList(id, this, params, callback, options, secret);
+    deleteLevelList(id: number, callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        lists.deleteLevelList(id, this, params, callback, options);
     }
-    getAccountURL(type: number, callback: (data: string | false) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        accounts.getAccountURL(type, this, params, callback, options, secret);
+    getAccountURL(type: number, callback: (data: string | false) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        accounts.getAccountURL(type, this, params, callback, options);
     }
-    getBackupAccountURL(callback: (data: string | false) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        accounts.getAccountURL(1, this, params, callback, options, secret);
+    getBackupAccountURL(callback: (data: string | false) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        accounts.getAccountURL(1, this, params, callback, options);
     }
-    getSyncAccountURL(callback: (data: string | false) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        accounts.getAccountURL(2, this, params, callback, options, secret);
+    getSyncAccountURL(callback: (data: string | false) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        accounts.getAccountURL(2, this, params, callback, options);
     }
-    getLevelScores(levelID: number, type: number, opts: scores.GetLevelScoresOptions, callback: (data: (u.User & { percentage?: number })[]) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        scores.getLevelScores(levelID, type, opts, this, params, callback, options, secret);
+    getLevelScores(levelID: number, type: number, opts: scores.GetLevelScoresOptions, callback: (data: (u.User & { percentage?: number })[]) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        scores.getLevelScores(levelID, type, opts, this, params, callback, options);
     }
-    getPlatformerLevelScores(levelID: number, type: string, mode: number, opts: scores.GetPlatformerLevelScoresOptions, callback: (data: (u.User & { time?: number, points?: number })[]) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        scores.getPlatformerLevelScores(levelID, type, mode, opts, this, params, callback, options, secret);
+    getPlatformerLevelScores(levelID: number, type: string, mode: number, opts: scores.GetPlatformerLevelScoresOptions, callback: (data: (u.User & { time?: number, points?: number })[]) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        scores.getPlatformerLevelScores(levelID, type, mode, opts, this, params, callback, options);
     }
-    getContentURL(callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig, secret?: string) {
-        songs.getContentURL(this, params, callback, options, secret);
+    getContentURL(callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
+        songs.getContentURL(this, params, callback, options);
     }
     getMusicLibraryVersion(callback: (data: string) => void, params?: GenericRequestOptions, options?: AxiosRequestConfig) {
         songs.getMusicLibraryVersion(this, params, callback, options);

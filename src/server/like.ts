@@ -11,7 +11,7 @@ export enum ContentType {
     LIST = 4,
 }
 
-export function likeItem(itemID: number, special: number, type: ContentType, like: 0 | 1, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function likeItem(itemID: number, special: number, type: ContentType, like: 0 | 1, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     if (!instance.account) throw new Error("You must authenticate in order to like/dislike items");
     const rs = utils.rs(10);
     const chk = utils.chk([
@@ -38,5 +38,5 @@ export function likeItem(itemID: number, special: number, type: ContentType, lik
         gjp2: utils.gjp2(instance.account.password)
     }, function (data) {
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
