@@ -9,7 +9,7 @@ export interface LeaderboardResult {
     emptyUsers: number;
 }
 
-export function getLeaderboards(type: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: LeaderboardResult) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getLeaderboards(type: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: LeaderboardResult) => void, options?: AxiosRequestConfig) {
     genericRequest("getLeaderboards", { type }, function (data) {
         const dr = data.split("|");
         const d = dr.filter(e => !!e);
@@ -18,7 +18,7 @@ export function getLeaderboards(type: string, instance: GDClient, params: Generi
             users,
             emptyUsers: dr.length - d.length
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface GetLevelScoresOptions {
@@ -53,7 +53,7 @@ export interface GetLevelScoresOptions {
     percent?: number;
 }
 
-export function getLevelScores(levelID: number, type: number, opts: GetLevelScoresOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: (utils.User & { percentage?: number })[]) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getLevelScores(levelID: number, type: number, opts: GetLevelScoresOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: (utils.User & { percentage?: number })[]) => void, options?: AxiosRequestConfig) {
     const s1 = (opts.attempts || 0) + 8354;
     const s2 = (opts.bestAttemptClicks || 0) + 3991;
     const s3 = (opts.bestAttemptTime || 0) + 4085;
@@ -114,7 +114,7 @@ export function getLevelScores(levelID: number, type: number, opts: GetLevelScor
             delete scores[i].stars;
         }
         callback(scores);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface GetPlatformerLevelScoresOptions {
@@ -149,7 +149,7 @@ export interface GetPlatformerLevelScoresOptions {
     percent?: number;
 }
 
-export function getPlatformerLevelScores(levelID: number, type: string, mode: number, opts: GetPlatformerLevelScoresOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: (utils.User & { time?: number, points?: number })[]) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getPlatformerLevelScores(levelID: number, type: string, mode: number, opts: GetPlatformerLevelScoresOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: (utils.User & { time?: number, points?: number })[]) => void, options?: AxiosRequestConfig) {
     let bestAttemptTime = opts.bestAttemptTime;
     if (!bestAttemptTime) {
         if (opts.time)
@@ -219,5 +219,5 @@ export function getPlatformerLevelScores(levelID: number, type: string, mode: nu
             delete scores[i].stars;
         }
         callback(scores);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }

@@ -50,7 +50,7 @@ export interface GetLevelsResponse {
  * @param {object} options Extra Axios parameters
  * @param {string} secret The secret parameter
  */
-export function getLevels(opts: GetLevelsOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetLevelsResponse) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getLevels(opts: GetLevelsOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetLevelsResponse) => void, options?: AxiosRequestConfig) {
     const diffMap = {
         "-1": -3,
         0: -1,
@@ -158,7 +158,7 @@ export function getLevels(opts: GetLevelsOptions, instance: GDClient, params: Ge
             isHashValid: utils.generateLevelsHash(levels) == hash,
             date
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface GetDailyLevelResponse {
@@ -166,13 +166,13 @@ export interface GetDailyLevelResponse {
     timeLeft: number;
 }
 
-export function getDailyLevel(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetDailyLevelResponse) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getDailyLevel(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetDailyLevelResponse) => void, options?: AxiosRequestConfig) {
     genericRequest<string>("getDailyLevel", {}, function (data) {
         callback({
             dailyID: Number(data.split("|")[0]),
             timeLeft: Number(data.split("|")[1])
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface GetMapPacksResponse {
@@ -184,7 +184,7 @@ export interface GetMapPacksResponse {
     isHashValid: boolean;
 }
 
-export function getMapPacks(instance: GDClient, params: (GenericRequestOptions & { page?: number }) = {}, callback: (data: GetMapPacksResponse) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getMapPacks(instance: GDClient, params: (GenericRequestOptions & { page?: number }) = {}, callback: (data: GetMapPacksResponse) => void, options?: AxiosRequestConfig) {
     genericRequest("getMapPacks", {}, function (data) {
         const segments = data.split("#");
         const packsRaw = segments[0].split("|");
@@ -202,7 +202,7 @@ export function getMapPacks(instance: GDClient, params: (GenericRequestOptions &
             hash,
             isHashValid: utils.generateMapPacksHash(packs) == hash
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface GauntletPack {
@@ -216,7 +216,7 @@ export interface GetGauntlesResponse {
     isHashValid: boolean;
 }
 
-export function getGauntlets(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetGauntlesResponse) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getGauntlets(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetGauntlesResponse) => void, options?: AxiosRequestConfig) {
     genericRequest("getGauntlets", { special: 1 }, function (data) {
         const segments = data.split("#");
         const packsRaw = segments[0].split("|");
@@ -234,7 +234,7 @@ export function getGauntlets(instance: GDClient, params: GenericRequestOptions =
             hash,
             isHashValid: utils.generateGauntletsHash(packs) == hash,
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface DownloadLevelResponse {
@@ -247,7 +247,7 @@ export interface DownloadLevelResponse {
     extraArtists?: Record<string, string>;
 }
 
-export function downloadLevel(levelID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: DownloadLevelResponse) => void, options?: AxiosRequestConfig, secret?: string) {
+export function downloadLevel(levelID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: DownloadLevelResponse) => void, options?: AxiosRequestConfig) {
     delete params.levelID;
 
     const opt = {
@@ -318,14 +318,14 @@ export function downloadLevel(levelID: number, instance: GDClient, params: Gener
             json.extraArtists = utils.robTopSplitDict(segments[5], ",");
         }
         callback(json);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
-export function reportLevel(levelID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function reportLevel(levelID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("reportLevel", { levelID }, function (data) {
         if (Number(data) > 0) callback(data);
         else throw new Error(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 // export function deleteLevel(levelID, instance, params, callback, options, secret) {
@@ -335,7 +335,7 @@ export function reportLevel(levelID: number, instance: GDClient, params: Generic
 //     }, instance, params, options, (secret || constants.SECRETS.DELETE))
 // }
 
-export function rateLevel(levelID: number, stars: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function rateLevel(levelID: number, stars: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     if (!instance.account) throw new Error("You must authenticate in order to send rate suggestions for levels");
     const rs = utils.rs(10);
     const chk = utils.chk([
@@ -358,21 +358,24 @@ export function rateLevel(levelID: number, stars: number, instance: GDClient, pa
         gjp2: utils.gjp2(instance.account.password)
     }, function (data) {
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
-export function rateDemon(levelID: number, rating: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function rateDemon(levelID: number, rating: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     if (!instance.account) throw new Error("You must authenticate in order to send rate suggestions for levels");
     genericRequest("rateDemon", { levelID, rating, accountID: instance.account.accountID, gjp2: utils.gjp2(instance.account.password) }, function (data) {
         callback(data);
-    }, instance, params, options, secret || constants.SECRETS.MOD);
+    }, instance, {
+        secret: params.secret || constants.SECRETS.MOD,
+        ...params,
+    }, options);
 }
 
-export function updateDescription(levelID: number, description: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function updateDescription(levelID: number, description: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     if (!instance.account) throw new Error("You must authenticate in order to update a level's description");
     genericRequest("updateDescription", { levelID, levelDesc: utils.base64Encode(description), accountID: instance.account.accountID, gjp2: utils.gjp2(instance.account.password) }, function (data) {
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface UploadLevelOptions {
@@ -399,7 +402,7 @@ export interface UploadLevelOptions {
     sfxIDs?: number[];
 }
 
-export function uploadLevel(opts: UploadLevelOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function uploadLevel(opts: UploadLevelOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     if (!instance.account) throw new Error("You must authenticate in order to upload a level");
     const seed2 = utils.generateUploadSeed2(opts.levelString);
     const song: {
@@ -441,13 +444,16 @@ export function uploadLevel(opts: UploadLevelOptions, instance: GDClient, params
     genericRequest("uploadLevel", parsedOptions, function (id) {
         if (id == "-1") throw new Error("-1");
         callback(id);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
-export function deleteLevel(levelID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function deleteLevel(levelID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     if (!instance.account) throw new Error("You must authenticate in order to delete a level");
     genericRequest("deleteLevel", { levelID, accountID: instance.account.accountID, gjp2: utils.gjp2(instance.account.password) }, (data) => {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret || constants.SECRETS.DELETE);
+    }, instance, {
+        secret: params.secret || constants.SECRETS.DELETE,
+        ...params,
+    }, options);
 }

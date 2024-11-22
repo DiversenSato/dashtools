@@ -12,13 +12,14 @@ export interface GenericRequestOptions {
     accountID?: number;
     gjp2?: string;
     weekly?: number;
+    secret?: string;
 }
 
-export function genericRequest<T = string>(endpoint: string, paramsInternal: Record<string, string | number> = {}, callbackInternal: (data: T) => void, instance: GDClient, params: GenericRequestOptions, options?: axios.AxiosRequestConfig, secret?: string) {
+export function genericRequest<T = string>(endpoint: string, paramsInternal: Record<string, string | number> = {}, callbackInternal: (data: T) => void, instance: GDClient, options: GenericRequestOptions, axiosOptions?: axios.AxiosRequestConfig) {
     const requestData = {
-        secret: secret || constants.SECRETS.COMMON,
+        secret: options.secret || constants.SECRETS.COMMON,
         ...paramsInternal,
-        ...params,
+        ...options,
     };
     if (!constants.VERSIONLESS_ENDPOINTS.includes(endpoint)) {
         requestData.gameVersion = instance.versions.gameVersion;
@@ -28,7 +29,7 @@ export function genericRequest<T = string>(endpoint: string, paramsInternal: Rec
     // else if (requestData.gameVersion == 21) requestData.gdw = 0;
     requestData.gdw = 0;
 
-    const hostElem = instance.server.replace("https://", "").replace("http://", "").split("/")[0];
+    const hostElem = new URL(instance.server).host;
 
     // console.log(opts)
     axios.default.post<T>(`${instance.server}/${instance.endpoints[endpoint]}`, requestData, {
@@ -36,7 +37,7 @@ export function genericRequest<T = string>(endpoint: string, paramsInternal: Rec
             ...instance.headers,
             Host: hostElem,
         },
-        ...options,
+        ...axiosOptions,
     }).then(data => {
         // if (data.data < 0) throw new Error(data.data) 
         callbackInternal(data.data);
@@ -49,31 +50,32 @@ export interface AccountRequestOptions {
     gameVersion?: number;
     binaryVersion?: number;
     gdw?: number;
+    secret?: string;
 }
 
-export function accountRequest<T = string>(endpoint: string, paramsInternal: Record<string, string | number> = {}, callbackInternal: (data: T) => void, instance: GDClient, params?: AccountRequestOptions, options?: axios.AxiosRequestConfig, secret?: string) {
-    const opts = {
-        secret: secret || constants.SECRETS.COMMON,
+export function accountRequest<T = string>(endpoint: string, paramsInternal: Record<string, string | number> = {}, callbackInternal: (data: T) => void, instance: GDClient, options: AccountRequestOptions = {}, axiosOptions?: axios.AxiosRequestConfig) {
+    const requestData = {
+        secret: options.secret || constants.SECRETS.ACCOUNT,
         ...paramsInternal,
-        ...params,
+        ...options,
     };
     if (!constants.VERSIONLESS_ENDPOINTS.includes(endpoint)) {
-        opts.gameVersion = instance.versions.gameVersion;
-        opts.binaryVersion = instance.versions.binaryVersion;
+        requestData.gameVersion = instance.versions.gameVersion;
+        requestData.binaryVersion = instance.versions.binaryVersion;
     }
     // if (instance.gdWorld) requestData.gdw = 1;
     // else if (requestData.gameVersion == 21) requestData.gdw = 0;
-    opts.gdw = 0;
+    requestData.gdw = 0;
 
-    const hostElem = instance.accountServer.replace("https://", "").replace("http://", "").split("/")[0];
+    const hostElem = new URL(instance.accountServer).host;
 
     // console.log(opts)
-    axios.default.post<T>(`${instance.accountServer}/${instance.endpoints[endpoint]}`, opts, {
+    axios.default.post<T>(`${instance.accountServer}/${instance.endpoints[endpoint]}`, requestData, {
         headers: {
             ...instance.headers,
             Host: hostElem
         },
-        ...options
+        ...axiosOptions
     }).then(data => {
         // if (data.data < 0) throw new Error(data.data) 
         callbackInternal(data.data);
@@ -96,7 +98,8 @@ export function contentRequest<T = string>(endpoint: string, paramsInternal = {}
         ...paramsInternal,
         ...params
     };
-    const hostElem = instance.contentServer.replace("https://", "").replace("http://", "").split("/")[0];
+
+    const hostElem = new URL(instance.contentServer).host;
     let path = instance.endpoints[endpoint];
     if (!path) path = endpoint;
 

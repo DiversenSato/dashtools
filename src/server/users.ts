@@ -1,10 +1,10 @@
-import { genericRequest, GenericRequestOptions } from "./generic.js";
+import { accountRequest, genericRequest, GenericRequestOptions } from "./generic.js";
 import * as constants from "../constants.js";
 import * as utils from "../utils.js";
 import { GDClient } from "../index.js";
 import { AxiosRequestConfig } from "axios";
 
-export function searchUsers(username: string, instance: GDClient, params: GenericRequestOptions, callback: (data: object) => void, options: AxiosRequestConfig, secret?: string) {
+export function searchUsers(username: string, instance: GDClient, params: GenericRequestOptions, callback: (data: object) => void, options: AxiosRequestConfig) {
     genericRequest<string>("getUsers", { str: username }, function (data) {
         const segments = data.split("#");
         const users = segments[0].split("|").map(u => utils.parseUser(u));
@@ -15,10 +15,10 @@ export function searchUsers(username: string, instance: GDClient, params: Generi
             offset: Number(pages[1]),
             pageSize: Number(pages[2]),
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
-export function getUserByAccountID(targetAccountID: number, logout: boolean, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: utils.User) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getUserByAccountID(targetAccountID: number, logout: boolean, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: utils.User) => void, options?: AxiosRequestConfig) {
     const auth: {
         accountID?: number;
         gjp2?: string;
@@ -29,7 +29,7 @@ export function getUserByAccountID(targetAccountID: number, logout: boolean, ins
     }
     genericRequest("getUserInfo", { targetAccountID, ...auth }, function (data) {
         callback(utils.parseUser(data));
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface UpdateUserOptions {
@@ -77,7 +77,7 @@ export interface UpdateUserOptions {
     };
 }
 
-export function updateUserScore(opt: UpdateUserOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: number) => void, options?: AxiosRequestConfig, secret?: string) {
+export function updateUserScore(opt: UpdateUserOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: number) => void, options?: AxiosRequestConfig) {
     if (!instance.account && (!params.accountID || !params.gjp2)) throw new Error("Must authenticate with account");
     const demons = opt.demons || opt.completedDemons.length;
     const dinfo = opt.completedDemons.join(",");
@@ -170,11 +170,11 @@ export function updateUserScore(opt: UpdateUserOptions, instance: GDClient, para
         ], constants.KEYS.STAT_SUBMISSION, constants.SALTS.STAT_SUBMISSION)
     }, function (data) {
         callback(Number(data));
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
-export function updateAccountSettings(mS: string, frS: string, cS: string, youtube: string, twitch: string, twitter: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
-    genericRequest("updateAccountSettings", {
+export function updateAccountSettings(mS: string, frS: string, cS: string, youtube: string, twitch: string, twitter: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
+    accountRequest("updateAccountSettings", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
         mS, frS, cS,
@@ -184,5 +184,5 @@ export function updateAccountSettings(mS: string, frS: string, cS: string, youtu
     }, function (data) {
         if (data == "-1") throw new Error("-1");
         else callback(data);
-    }, instance, params, options, secret || constants.SECRETS.ACCOUNT);
+    }, instance, params, options);
 }

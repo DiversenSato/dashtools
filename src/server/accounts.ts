@@ -29,7 +29,10 @@ export function registerAccount(username: string, email: string, password: strin
             default:
                 throw new Error(data.toString());
         }
-    }, instance, params, options, secret || constants.SECRETS.ACCOUNT);
+    }, instance, {
+        secret: secret || constants.SECRETS.ACCOUNT,
+        ...params,
+    }, options);
 }
 
 export interface LoginAccountResult {
@@ -37,7 +40,7 @@ export interface LoginAccountResult {
     playerID: number;
 }
 
-export function loginAccount(username: string, password: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: LoginAccountResult) => void, options?: AxiosRequestConfig, secret?: string) {
+export function loginAccount(username: string, password: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: LoginAccountResult) => void, options?: AxiosRequestConfig) {
     genericRequest("loginAccount", { userName: username, password, udid: instance.account.udid }, function (data) {
         if (Number(data) < 0) {
             switch (data) {
@@ -60,16 +63,22 @@ export function loginAccount(username: string, password: string, instance: GDCli
                 playerID: Number(data.split(",")[1])
             });
         }
-    }, instance, params, options, secret || constants.SECRETS.ACCOUNT);
+    }, instance, {
+        secret: params.secret || constants.SECRETS.ACCOUNT,
+        ...params,
+    }, options);
 }
-export function requestModAccess(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string | false) => void, options?: AxiosRequestConfig, secret?: string) {
+export function requestModAccess(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string | false) => void, options?: AxiosRequestConfig) {
     genericRequest("requestModAccess", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password)
     }, function (data) {
         if (data == "-1") callback(false);
         else callback(data);
-    }, instance, params, options, secret || constants.SECRETS.ACCOUNT);
+    }, instance, {
+        secret: params.secret || constants.SECRETS.ACCOUNT,
+        ...params,
+    }, options);
 }
 
 export interface SaveData {
@@ -81,7 +90,7 @@ export interface SaveData {
     mappacks: utils.MapPack[];
 }
 
-export function loadSaveData(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: SaveData) => void, options?: AxiosRequestConfig, secret?: string) {
+export function loadSaveData(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: SaveData) => void, options?: AxiosRequestConfig) {
     if (!instance.account) throw new Error("You must authenticate in order to load your save data");
     accountRequest("loadSaveData", {
         accountID: instance.account.accountID,
@@ -108,9 +117,9 @@ export function loadSaveData(instance: GDClient, params: GenericRequestOptions =
                 .split("|")
                 .map(m => utils.parseMapPack(m))
         });
-    }, instance, params, options, secret || constants.SECRETS.ACCOUNT);
+    }, instance, params, options);
 }
-export function backupSaveData(gameManager: string, localLevels: string, instance: GDClient, params: AccountRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function backupSaveData(gameManager: string, localLevels: string, instance: GDClient, params: AccountRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     if (!instance.account) throw new Error("You must authenticate in order to backup save data");
     accountRequest("backupSaveData", {
         accountID: instance.account.accountID,
@@ -121,15 +130,18 @@ export function backupSaveData(gameManager: string, localLevels: string, instanc
     }, function (data) {
         if (Number(data) < 0) throw new Error(data);
         callback(data);
-    }, instance, params, options, secret || constants.SECRETS.ACCOUNT);
+    }, instance, params, options);
 }
 
-export function getAccountURL(type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string | false) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getAccountURL(type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string | false) => void, options?: AxiosRequestConfig) {
     genericRequest("getAccountURL", {
         accountID: (instance.account && instance.account.accountID ? instance.account.accountID : 71), // any valid account ID works, so RobTop's account ID is used as a placeholder
         type
     }, function (data) {
         if (data == "-1") callback(false);
         else callback(data);
-    }, instance, params, options, secret || constants.SECRETS.ACCOUNT);
+    }, instance, {
+        secret: params.secret || constants.SECRETS.ACCOUNT,
+        ...params,
+    }, options);
 }

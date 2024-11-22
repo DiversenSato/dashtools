@@ -3,12 +3,12 @@ import * as utils from "../utils.js";
 import { GDClient } from "../index.js";
 import { AxiosRequestConfig } from "axios";
 
-export function getSongInfo(songID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (song: utils.Song) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getSongInfo(songID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (song: utils.Song) => void, options?: AxiosRequestConfig) {
     genericRequest("getSongInfo", { songID }, function (data) {
         if (data == "-1") throw new Error("Song not found");
         const d = utils.parseSongs(data);
         callback(d[songID] || d);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface ArtisResult {
@@ -18,7 +18,7 @@ export interface ArtisResult {
     pageSize: number;
 }
 
-export function getTopArtists(page: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: ArtisResult) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getTopArtists(page: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: ArtisResult) => void, options?: AxiosRequestConfig) {
     genericRequest("getTopArtists", { page }, function (d) {
         const data = d.split("#");
         const artists = utils.parseArtists(data[0]);
@@ -29,12 +29,12 @@ export function getTopArtists(page: number, instance: GDClient, params: GenericR
             offset: Number(pageInfo[1]),
             pageSize: Number(pageInfo[2])
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function getContentURL(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getContentURL(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("getContentURL", {}, function (data) {
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 export function getMusicLibraryVersion(instance: GDClient, params: ContentRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     contentRequest("musicLibraryVersion", {}, function (data) {

@@ -11,7 +11,7 @@ export interface CommentResult {
     pageSize: number;
 }
 
-export function getLevelComments(levelID: number, count: number, mode: number, page: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: CommentResult) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getLevelComments(levelID: number, count: number, mode: number, page: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: CommentResult) => void, options?: AxiosRequestConfig) {
     genericRequest("getComments", { levelID, count, mode, page }, function (data) {
         if (Number(data) < 0) {
             callback({
@@ -31,9 +31,9 @@ export function getLevelComments(levelID: number, count: number, mode: number, p
                 pageSize: Number(pages[2]),
             });
         }
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function getCommentHistory(playerID: number, count: number, mode: number, page: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: CommentResult) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getCommentHistory(playerID: number, count: number, mode: number, page: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: CommentResult) => void, options?: AxiosRequestConfig) {
     genericRequest("getCommentHistory", { userID: playerID, count, mode, page }, function (data) {
         const segments = data.split("#");
         const comments = segments[0].split("|").map(u => utils.parseComment(u));
@@ -45,9 +45,9 @@ export function getCommentHistory(playerID: number, count: number, mode: number,
             offset: Number(pages[1]),
             pageSize: Number(pages[2]),
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function uploadProfilePost(content: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function uploadProfilePost(content: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("uploadAccountComment", {
         comment: utils.base64Encode(content),
         accountID: instance.account.accountID,
@@ -59,9 +59,9 @@ export function uploadProfilePost(content: string, instance: GDClient, params: G
         } : {}),
     }, function (data) {
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function deleteProfilePost(id: number, accountID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string | true) => void, options?: AxiosRequestConfig, secret?: string) {
+export function deleteProfilePost(id: number, accountID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string | true) => void, options?: AxiosRequestConfig) {
     genericRequest("deleteAccountComment", {
         commentID: id,
         targetAccountID: (accountID || instance.account.accountID),
@@ -73,9 +73,9 @@ export function deleteProfilePost(id: number, accountID: number, instance: GDCli
         } else {
             callback(data);
         }
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function uploadComment(levelID: number, content: string, percentage: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string | true) => void, options?: AxiosRequestConfig, secret?: string) {
+export function uploadComment(levelID: number, content: string, percentage: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string | true) => void, options?: AxiosRequestConfig) {
     if (!instance.account.username) throw new Error("Must specify account username");
     const chk = utils.chk([instance.account.username, utils.base64Encode(content), levelID, percentage, 0], constants.KEYS.COMMENT, constants.SALTS.COMMENT);
     genericRequest("uploadComment", {
@@ -88,10 +88,10 @@ export function uploadComment(levelID: number, content: string, percentage: numb
         userName: instance.account.username
     }, function (data) {
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
-export function deleteComment(levelID: number, commentID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string | true) => void, options?: AxiosRequestConfig, secret?: string) {
+export function deleteComment(levelID: number, commentID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string | true) => void, options?: AxiosRequestConfig) {
     genericRequest("deleteComment", {
         levelID,
         commentID,
@@ -103,5 +103,5 @@ export function deleteComment(levelID: number, commentID: number, instance: GDCl
         } else {
             callback(data);
         }
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }

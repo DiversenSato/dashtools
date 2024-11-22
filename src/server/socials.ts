@@ -4,7 +4,7 @@ import * as utils from "../utils.js";
 import { GDClient } from "../index.js";
 import { AxiosRequestConfig } from "axios";
 
-export function getUserList(type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: utils.User[]) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getUserList(type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: utils.User[]) => void, options?: AxiosRequestConfig) {
     genericRequest("getUserList", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -12,7 +12,7 @@ export function getUserList(type: number, instance: GDClient, params: GenericReq
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(data.split("|").map(e => utils.parseUser(e)));
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface GetMessagesResult {
@@ -22,7 +22,7 @@ export interface GetMessagesResult {
     pageSize: number;
 }
 
-export function getMessages(page: number, type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetMessagesResult) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getMessages(page: number, type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetMessagesResult) => void, options?: AxiosRequestConfig) {
     genericRequest("getMessages", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -40,10 +40,10 @@ export function getMessages(page: number, type: number, instance: GDClient, para
             offset: Number(pages[1]),
             pageSize: Number(pages[2])
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
-export function readMessage(messageID: number, isSender: boolean, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: utils.Message) => void, options?: AxiosRequestConfig, secret?: string) {
+export function readMessage(messageID: number, isSender: boolean, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: utils.Message) => void, options?: AxiosRequestConfig) {
     genericRequest("readMessage", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -52,10 +52,10 @@ export function readMessage(messageID: number, isSender: boolean, instance: GDCl
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(utils.parseMessage(data));
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
-export function sendMessage(accountID: number, subject: string, body: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function sendMessage(accountID: number, subject: string, body: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("sendMessage", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -65,9 +65,9 @@ export function sendMessage(accountID: number, subject: string, body: string, in
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function deleteMessage(id: number, isSender: boolean, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function deleteMessage(id: number, isSender: boolean, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("deleteMessage", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -76,9 +76,9 @@ export function deleteMessage(id: number, isSender: boolean, instance: GDClient,
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function blockUser(accountID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function blockUser(accountID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("blockUser", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -86,9 +86,9 @@ export function blockUser(accountID: number, instance: GDClient, params: Generic
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function unblockUser(accountID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function unblockUser(accountID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("unblockUser", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -96,9 +96,9 @@ export function unblockUser(accountID: number, instance: GDClient, params: Gener
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function deleteFriendRequests(accountIDs: number | number[], isSender: boolean, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function deleteFriendRequests(accountIDs: number | number[], isSender: boolean, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("deleteFriendRequests", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -108,9 +108,9 @@ export function deleteFriendRequests(accountIDs: number | number[], isSender: bo
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function sendFriendRequest(accountID: number, comment: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function sendFriendRequest(accountID: number, comment: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("sendFriendRequest", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -119,7 +119,7 @@ export function sendFriendRequest(accountID: number, comment: string, instance: 
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface GetFriendRequestsResponse {
@@ -129,7 +129,7 @@ export interface GetFriendRequestsResponse {
     pageSize: number;
 }
 
-export function getFriendRequests(page: number, type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetFriendRequestsResponse) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getFriendRequests(page: number, type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetFriendRequestsResponse) => void, options?: AxiosRequestConfig) {
     genericRequest("getFriendRequests", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -147,9 +147,9 @@ export function getFriendRequests(page: number, type: number, instance: GDClient
             offset: Number(pages[1]),
             pageSize: Number(pages[2])
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function readFriendRequest(requestID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function readFriendRequest(requestID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("readFriendRequest", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -157,9 +157,9 @@ export function readFriendRequest(requestID: number, instance: GDClient, params:
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function acceptFriendRequest(requestID: number, targetAccountID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function acceptFriendRequest(requestID: number, targetAccountID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("acceptFriendRequest", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -168,9 +168,9 @@ export function acceptFriendRequest(requestID: number, targetAccountID: number, 
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
-export function removeFriend(targetAccountID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function removeFriend(targetAccountID: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("removeFriend", {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password),
@@ -178,5 +178,5 @@ export function removeFriend(targetAccountID: number, instance: GDClient, params
     }, function(data) {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }

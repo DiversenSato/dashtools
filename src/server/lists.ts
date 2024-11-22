@@ -27,7 +27,7 @@ export interface GetLevelListsResult {
     isHashValid: boolean;
 }
 
-export function getLevelLists(opts: GetLevelListsOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetLevelListsResult) => void, options?: AxiosRequestConfig, secret?: string) {
+export function getLevelLists(opts: GetLevelListsOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetLevelListsResult) => void, options?: AxiosRequestConfig) {
     const diffMap: Record<string, number> = {
         "-1": -3,
         0: -1,
@@ -92,7 +92,7 @@ export function getLevelLists(opts: GetLevelListsOptions, instance: GDClient, pa
             hash,
             isHashValid: true
         });
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
 export interface UploadLevelListOptions {
@@ -106,7 +106,7 @@ export interface UploadLevelListOptions {
     version?: number;
 }
 
-export function uploadLevelList(opts: UploadLevelListOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function uploadLevelList(opts: UploadLevelListOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     const seed2 = utils.rs(5);
     const translatedOptions = {
         listID: opts.id || 0,
@@ -146,12 +146,15 @@ export function uploadLevelList(opts: UploadLevelListOptions, instance: GDClient
             }
         }
         callback(data);
-    }, instance, params, options, secret);
+    }, instance, params, options);
 }
 
-export function deleteLevelList(id: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig, secret?: string) {
+export function deleteLevelList(id: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: string) => void, options?: AxiosRequestConfig) {
     genericRequest("deleteList", { listID: id, accountID: instance.account.accountID, gjp2: utils.gjp2(instance.account.password) }, function (data) {
         if (data == "-1") throw new Error("-1");
         callback(data);
-    }, instance, params, options, secret || constants.SECRETS.DELETE);
+    }, instance, {
+        secret: params.secret || constants.SECRETS.DELETE,
+        ...params,
+    }, options);
 }
