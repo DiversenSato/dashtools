@@ -1,9 +1,16 @@
-import { genericRequest } from "./generic.js";
+import { genericRequest, GenericRequestOptions } from "./generic.js";
 import * as constants from "../constants.js";
 import * as utils from "../utils.js";
+import { GDClient } from "../index.js";
+import { AxiosRequestConfig } from "axios";
 
-export function getLeaderboards(type, instance, params, callback, options, secret) {
-    genericRequest("getLeaderboards", {type}, function(data) {
+export interface LeaderboardResult {
+    users: utils.User[];
+    emptyUsers: number;
+}
+
+export function getLeaderboards(type: string, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: LeaderboardResult) => void, options?: AxiosRequestConfig, secret?: string) {
+    genericRequest("getLeaderboards", { type }, function (data) {
         const dr = data.split("|");
         const d = dr.filter(e => !!e);
         const users = d.map(u => utils.parseUser(u));
@@ -13,7 +20,40 @@ export function getLeaderboards(type, instance, params, callback, options, secre
         });
     }, instance, params, options, secret);
 }
-export function getLevelScores(levelID, type, opts, instance, params, callback, options, secret) {
+
+export interface GetLevelScoresOptions {
+    time?: number;
+    attempts?: number;
+    bestAttemptClicks?: number;
+    bestAttemptTime?: number;
+    percentages?: number[];
+    percentage?: number;
+    coins?: number;
+    timelyID?: number;
+    points?: number;
+    plat?: number;
+    mode?: number;
+    type?: number;
+    s1?: number;
+    s2?: number;
+    s3?: number;
+    s4?: number;
+    s5?: number;
+    s6?: string;
+    s7?: string;
+    s8?: number;
+    s9?: number;
+    s10?: number;
+    levelID?: number;
+    chk?: string;
+    accountID?: number;
+    gjp2?: string;
+    uuid?: number;
+    udid?: string;
+    percent?: number;
+}
+
+export function getLevelScores(levelID: number, type: number, opts: GetLevelScoresOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: (utils.User & { percentage?: number })[]) => void, options?: AxiosRequestConfig, secret?: string) {
     const s1 = (opts.attempts || 0) + 8354;
     const s2 = (opts.bestAttemptClicks || 0) + 3991;
     const s3 = (opts.bestAttemptTime || 0) + 4085;
@@ -31,16 +71,16 @@ export function getLevelScores(levelID, type, opts, instance, params, callback, 
 
     // accountID,levelID,percentage,bestAttemptTime,bestAttemptClicks,attempts,levelSeed,pbDiffs,1,coins,timelyID
     const values = [
-        instance.account.accountID, 
-        levelID, 
+        instance.account.accountID,
+        levelID,
         (opts.percentage || 0),
         (opts.bestAttemptTime || 0),
-        (opts.bestAttemptClicks || 0), 
+        (opts.bestAttemptClicks || 0),
         (opts.attempts || 0),
         s4,
         s6,
         1,
-        (opts.coins || 0), 
+        (opts.coins || 0),
         (opts.timelyID || 0)
     ];
     const chk = utils.chk(values, constants.KEYS.LEVEL_LEADERBOARD, constants.SALTS.LEVEL_LEADERBOARDS + s7);
@@ -66,18 +106,50 @@ export function getLevelScores(levelID, type, opts, instance, params, callback, 
         udid: instance.account.udid
     };
     if (percentage) opts.percent = percentage;
-    genericRequest("getLevelLeaderboards", opts, function(data) {
-        if (data == -1 || data == "-01") throw new Error(data);
-            const scores = data.split("|").map(u => utils.parseUser(u));
-            for (let i = 0; i < scores.length; i++) {
-                scores[i].percentage = scores[i].stars;
-                delete scores[i].stars;
-            }
-            callback(scores);
+    genericRequest("getLevelLeaderboards", opts as Record<string, string>, function (data) {
+        if (data == "-1" || data == "-01") throw new Error(data);
+        const scores = data.split("|").map(u => utils.parseUser(u)) as (utils.User & { percentage?: number })[];
+        for (let i = 0; i < scores.length; i++) {
+            scores[i].percentage = scores[i].stars;
+            delete scores[i].stars;
+        }
+        callback(scores);
     }, instance, params, options, secret);
 }
 
-export function getPlatformerLevelScores(levelID, type, mode, opts, instance, params, callback, options, secret) {
+export interface GetPlatformerLevelScoresOptions {
+    time?: number;
+    attempts?: number;
+    bestAttemptClicks?: number;
+    bestAttemptTime?: number;
+    percentages?: number[];
+    percentage?: number;
+    coins?: number;
+    timelyID?: number;
+    points?: number;
+    plat?: number;
+    mode?: number;
+    type?: string;
+    s1?: number;
+    s2?: number;
+    s3?: number;
+    s4?: number;
+    s5?: number;
+    s6?: string;
+    s7?: string;
+    s8?: number;
+    s9?: number;
+    s10?: number;
+    levelID?: number;
+    chk?: string;
+    accountID?: number;
+    gjp2?: string;
+    uuid?: number;
+    udid?: string;
+    percent?: number;
+}
+
+export function getPlatformerLevelScores(levelID: number, type: string, mode: number, opts: GetPlatformerLevelScoresOptions, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: (utils.User & { time?: number, points?: number })[]) => void, options?: AxiosRequestConfig, secret?: string) {
     let bestAttemptTime = opts.bestAttemptTime;
     if (!bestAttemptTime) {
         if (opts.time)
@@ -89,7 +161,7 @@ export function getPlatformerLevelScores(levelID, type, mode, opts, instance, pa
     const s2 = (opts.bestAttemptClicks || 0) + 3991;
     const s3 = bestAttemptTime + 4085;
     const s4 = utils.generatePlatformerLeaderboardSeed((opts.time || 0), (opts.points || 0));
-    let s6 = "0";
+    let s6: string = "0";
     if (opts.percentages)
         s6 = opts.percentages.map((v, i, a) => {
             let prev = a[i - 1];
@@ -102,21 +174,21 @@ export function getPlatformerLevelScores(levelID, type, mode, opts, instance, pa
 
     // accountID,levelID,percentage,bestAttemptTime,bestAttemptClicks,attempts,levelSeed,pbDiffs,1,coins,timelyID
     const values = [
-        instance.account.accountID, 
-        levelID, 
+        instance.account.accountID,
+        levelID,
         (opts.percentage || 0),
         bestAttemptTime,
-        (opts.bestAttemptClicks || 0), 
+        (opts.bestAttemptClicks || 0),
         (opts.attempts || 0),
         s4,
         s6,
         1,
-        (opts.coins || 0), 
+        (opts.coins || 0),
         (opts.timelyID || 0)
     ];
     const chk = utils.chk(values, constants.KEYS.LEVEL_LEADERBOARD, constants.SALTS.LEVEL_LEADERBOARDS + s7);
     const percentage = opts.percentage || 0;
-    if (s6 == "0") s6 = percentage;
+    if (s6 == "0") s6 = percentage.toString();
     opts = {
         time: (opts.time || 0),
         points: (opts.points || 0),
@@ -138,9 +210,9 @@ export function getPlatformerLevelScores(levelID, type, mode, opts, instance, pa
         udid: instance.account.udid
     };
     if (percentage) opts.percent = percentage;
-    genericRequest("getPlatformerLevelLeaderboards", opts, function(data) {
-        if (data == -1 || data == "-01") throw new Error(data);
-        const scores = data.split("|").map(u => utils.parseUser(u));
+    genericRequest("getPlatformerLevelLeaderboards", opts as Record<string, string>, function (data) {
+        if (data == "-1" || data == "-01") throw new Error(data);
+        const scores = data.split("|").map(u => utils.parseUser(u)) as (utils.User & { time?: number, points?: number })[];
         for (let i = 0; i < scores.length; i++) {
             if (mode == 0) scores[i].time = scores[i].stars;
             else scores[i].points = scores[i].stars;

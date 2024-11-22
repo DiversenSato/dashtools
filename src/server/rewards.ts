@@ -1,8 +1,38 @@
-import { genericRequest } from "./generic.js";
+import { genericRequest, GenericRequestOptions } from "./generic.js";
 import * as constants from "../constants.js";
 import * as utils from "../utils.js";
+import { GDClient } from "../index.js";
+import { AxiosRequestConfig } from "axios";
 
-export function getRewards(type, instance, params, callback, options, secret) {
+export interface GetRewardResult {
+    randomString1: string;
+    randomString2: string;
+    playerID: number;
+    chkNumber: number;
+    udid: string;
+    accountID: number;
+    smallChestCooldown: number;
+    smallChest: {
+        orbs: number;
+        diamonds: number;
+        item1: number;
+        item2: number;
+    };
+    claimedSmallChests: number;
+    largeChestCooldown: number;
+    largeChest: {
+        orbs: number;
+        diamonds: number;
+        item1: number;
+        item2: number;
+    };
+    claimedLargeChests: number;
+    rewardType: number;
+    hash: string;
+    isHashValid: boolean;
+}
+
+export function getRewards(type: number, instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetRewardResult) => void, options?: AxiosRequestConfig, secret?: string) {
     genericRequest("getRewards", {
         chk: `${utils.rs(5)}${utils.base64Encode(utils.xor(utils.getRandomNumber(10000, 1000000).toString(), constants.KEYS.CHEST_REWARDS))}`,
         rewardType: type,
@@ -13,7 +43,7 @@ export function getRewards(type, instance, params, callback, options, secret) {
         accountID: instance.account.accountID,
         gjp2: utils.gjp2(instance.account.password)
     }, function(data) {
-        if (data == -1) throw new Error(-1);
+        if (data == "-1") throw new Error("-1");
         const segments = data.split("|");
         const infoRaw = segments[0].slice(5);
         const info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHEST_REWARDS).split(":");
@@ -47,20 +77,39 @@ export function getRewards(type, instance, params, callback, options, secret) {
             claimedLargeChests: Number(info[10]),
             rewardType: Number(info[11]),
             hash,
-            isHashValid: utils.sha1(`${infoRaw}${constants.SALTS.REWARDS}`) == hash
+            isHashValid: utils.sha1(`${infoRaw}${constants.SALTS.REWARDS}`) == hash,
         });
     }, instance, params, options, secret);
 }
 
-export function getChallenges(instance, params, callback, options, secret) {
+export interface GetChallengesResult {
+    randomString1: string;
+    randomString2: string;
+    playerID: number;
+    chkNumber: number;
+    udid: string;
+    accountID: number;
+    newQuestsCooldown: number;
+    quests: {
+        unknown: string;
+        type: number;
+        amount: number;
+        reward: number;
+        name: string;
+    }[];
+    hash: string;
+    isHashValid: boolean;
+}
+
+export function getChallenges(instance: GDClient, params: GenericRequestOptions = {}, callback: (data: GetChallengesResult) => void, options?: AxiosRequestConfig, secret?: string) {
     genericRequest("getChallenges", {
         chk: `${utils.rs(5)}${utils.base64Encode(utils.xor(utils.getRandomNumber(10000, 1000000).toString(), constants.KEYS.CHALLENGES))}`,
         udid: instance.account.udid,
         uuid: instance.account.uuid,
         accountID: instance.account.accountID,
-        gjp2: utils.gjp2(instance.account.password)
+        gjp2: utils.gjp2(instance.account.password),
     }, function(data) {
-        if (data == -1) throw new Error(-1);
+        if (data == "-1") throw new Error("-1");
         const segments = data.split("|");
         const infoRaw = segments[0].slice(5);
         const info = utils.xor(utils.base64Decode(infoRaw), constants.KEYS.CHALLENGES).split(":");

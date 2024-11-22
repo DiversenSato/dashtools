@@ -1,132 +1,199 @@
 import * as constants from "./constants";
-import * as crypto from "node:crypto";
+import crypto from "node:crypto";
 import * as zlib from "node:zlib";
+import { GauntletPack } from "./server/levels";
 
-export function sha1(str: string, digestType = "hex") {
+/**
+ * Generates a SHA-1 hash of the given string.
+ *
+ * @param {string} str - The input string to hash.
+ * @param {crypto.BinaryToTextEncoding} [digestType="hex"] - The encoding of the output hash. Defaults to "hex".
+ * @returns {string} The SHA-1 hash of the input string in the specified encoding.
+ */
+export function sha1(str: string, digestType: crypto.BinaryToTextEncoding = "hex"): string {
     const hash = crypto.createHash("sha1");
     hash.update(str);
     return hash.digest(digestType);
 }
 
-export function md5(str, digestType = "hex") {
+export function md5(str: string, digestType: crypto.BinaryToTextEncoding = "hex") {
     const hash = crypto.createHash("md5");
     hash.update(str);
     return hash.digest(digestType);
 }
 
-export function getRandomNumber(min, max) {
+export function getRandomNumber(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function md5Buffer(str) {
+export function md5Buffer(str: string) {
     const hash = crypto.createHash("md5");
     hash.update(str);
     return hash.digest();
 }
 
-export function gjp(str) {
+export function gjp(str: string) {
     return base64Encode(xor(str, constants.KEYS.ACCOUNT_PASSWORD));
 }
 
-export function gjp2(str) {
+export function gjp2(str: string) {
     return sha1(str + constants.SALTS.GJP2);
 }
 
-export function xor(str, key) {
+export function xor(str: string, key: string) {
     return str.split("").map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ key.charCodeAt(i % key.length))).join("");
 }
 
-export function robTopSplit(str, sep) {
-    const map = new Map();
+/**
+ * Converts a string array of key value pairs seperated by a character into a map
+ * @param {string} str The string to split
+ * @param {string} sep The character to seperate the string by
+ * @returns {Map<string, string>} The map of key value pairs
+ */
+export function robTopSplit(str: string, sep: string): Map<string, string> {
+    const map = new Map<string, string>();
     const arr = str.split(sep);
     for (let i = 0; i < arr.length; i += 2) {
-        map.set(arr[i], arr[i+1]);
+        map.set(arr[i], arr[i + 1]);
     }
     return map;
 }
 
-export function robTopSplitDict(str, sep) {
-    const object = {};
+/**
+ * Similar to {@link robTopSplit} but returns an object instead of a map
+ * @param {string} str The string to split
+ * @param {string} sep The character to seperate the string by
+ * @returns {Record<string, string>} The object of keys and their values
+ */
+export function robTopSplitDict(str: string, sep: string): Record<string, string> {
+    const object: Record<string, string> = {};
     const arr = str.split(sep);
     for (let i = 0; i < arr.length; i += 2) {
-        object[arr[i]] = arr[i+1];
+        object[arr[i]] = arr[i + 1];
     }
     return object;
 }
 
-export function rs(n, charset) {
+/**
+ * Generates a random string of a specified length using the provided character set.
+ * If no character set is provided, a default set of characters is used.
+ *
+ * @param {number} n - The length of the random string to generate.
+ * @param {string[]} [charset] - An optional array of characters to use for generating the random string.
+ * @returns {string} A random string of length `n` composed of characters from the `charset`.
+ */
+export function rs(n: number, charset?: string[]): string {
     if (!charset) charset = constants.RS_CHARACTERS;
-    return new Array(n).fill("0").map(_ => charset[Math.floor(Math.random()*charset.length)]).join("");
+    return new Array(n).fill("0").map(_ => charset[Math.floor(Math.random() * charset.length)]).join("");
 }
 
-export function base64Encode(str) {
+export function base64Encode(str: string) {
     return Buffer.from(str).toString("base64").replace(/\+/g, "-").replace(/\//g, "_");
 }
 
-export function base64EncodeBuffer(str) {
+export function base64EncodeBuffer(str: Buffer): string {
     return Buffer.from(str).toString("base64").replace(/\+/g, "-").replace(/\//g, "_");
 }
 
-export function base64Decode(str) {
+export function base64Decode(str: string) {
     return Buffer.from(str.replace(/\+/g, "-").replace(/\//g, "_"), "base64url").toString("ascii");
 }
 
-export function base64DecodeBuffer(str) {
+export function base64DecodeBuffer(str: string) {
     return Buffer.from(str.replace(/\+/g, "-").replace(/\//g, "_"), "base64url");
 }
 
-export function generateCDNToken(endpoint, expires) {
-    return base64EncodeBuffer(md5Buffer(`${constants.LIBRARY_SECRET}${endpoint}${expires}`, "ascii")).replace(/=/g, "");
+export function generateCDNToken(endpoint: string, expires: number) {
+    return base64EncodeBuffer(md5Buffer(`${constants.LIBRARY_SECRET}${endpoint}${expires}`)).replace(/=/g, "");
 }
 
-export function generateHSV(h, s, v, s_checked, v_checked) {
+export function generateHSV(h: number, s: number, v: number, s_checked: boolean, v_checked: boolean) {
     return `${h}a${s}a${v}a${s_checked ? 1 : 0}a${v_checked ? 1 : 0}`;
 }
 
-export function chk(values, key, salt) {
-    const str = values.join("") + (salt || "");
+export function chk(values: (string | number)[], key: string, salt = "") {
+    const str = values.join("") + salt;
     return base64Encode(xor(sha1(str), key));
 }
 
-export function parseSongs(str) {
-    const songs = {};
+export interface Song {
+    name: string;
+    artistID: number;
+    artistName: string;
+    size: number;
+    isVerified: boolean;
+    link?: string;
+    videoID?: string;
+    artistYoutubeURL?: string;
+    priority?: number;
+    nongType?: number;
+    extraArtistIDs?: number[];
+    newButtonType?: number;
+    extraArtistNames?: string;
+    new: boolean;
+}
+
+export function parseSongs(str: string) {
+    const songs: Record<string, Song> = {};
+
     for (const i of str.split("~:~")) {
         const responseMap = robTopSplit(i, "~|~");
-        songs[responseMap.get("1")] = {
-            name: responseMap.get("2"),
+        const songID = responseMap.get("1");
+        if (!songID) continue;
+
+        const name = responseMap.get("2");
+        if (!name) throw new Error("Parsing error: Song name is missing.");
+        const artistName = responseMap.get("4");
+        if (!artistName) throw new Error("Parsing error: Artist name is missing.");
+
+        const song: Song = {
+            name,
             artistID: Number(responseMap.get("3")),
-            artistName: responseMap.get("4"),
+            artistName,
             size: Number(responseMap.get("5")),
             isVerified: !!Number(responseMap.get("8")),
-            link: decodeURIComponent(responseMap.get("10")),
             new: !!Number(responseMap.get("13"))
         };
-        if (responseMap.get("6")) songs[responseMap.get("1")].videoID = responseMap.get("6");
-        if (responseMap.get("7")) songs[responseMap.get("1")].artistYoutubeURL = responseMap.get("7");
-        if (responseMap.get("9")) songs[responseMap.get("1")].priority = Number(responseMap.get("9"));
-        if (responseMap.get("11") != undefined) songs[responseMap.get("1")].nongType = Number(responseMap.get("11"));
-        if (responseMap.get("12")) songs[responseMap.get("1")].extraArtistIDs = responseMap.get("12").split(".").map(e => Number(e));
-        if (responseMap.get("14")) songs[responseMap.get("1")].newButtonType = Number(responseMap.get("14"));
-        if (responseMap.get("15")) songs[responseMap.get("1")].extraArtistNames = responseMap.get("15");
-        for (const i of responseMap.keys()) {
-            if (!(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"].includes(i))) {
-                json[`unk_${i}`] = responseMap.get(i);
-            }
-        }
+        if (responseMap.get("6")) song.videoID = responseMap.get("6");
+        if (responseMap.get("7")) song.artistYoutubeURL = responseMap.get("7");
+        if (responseMap.get("9")) song.priority = Number(responseMap.get("9"));
+        if (responseMap.get("10")) song.link = decodeURIComponent(responseMap.get("10")!);
+        if (responseMap.get("11") != undefined) song.nongType = Number(responseMap.get("11"));
+        if (responseMap.get("12")) song.extraArtistIDs = responseMap.get("12")!.split(".").map(e => Number(e));
+        if (responseMap.get("14")) song.newButtonType = Number(responseMap.get("14"));
+        if (responseMap.get("15")) song.extraArtistNames = responseMap.get("15");
+
+        // for (const i of responseMap.keys()) {
+        //     if (!(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"].includes(i))) {
+        //         json[`unk_${i}`] = responseMap.get(i);
+        //     }
+        // }
+
+        songs[songID] = song;
     }
+
     delete songs["undefined"];
     return songs;
 }
 
-export function parseArtists(str) {
-    const artists = [];
+export interface Artist {
+    name: string;
+    youtube?: string;
+    [key: string]: string | undefined;
+}
+
+export function parseArtists(str: string): Artist[] {
+    const artists: Artist[] = [];
     for (const i of str.split("|")) {
         const responseMap = robTopSplit(i, ":");
-        const artist = {name: responseMap.get("4")};
+        const name = responseMap.get("4");
+        if (!name) continue;
+
+        const artist: Artist = { name };
         if (responseMap.get("7")) artist.youtube = responseMap.get("7");
         for (const i of responseMap.keys()) {
             if (i != "4" && i != "7") {
-                json[`unk_${i}`] = responseMap.get(i);
+                artist[`unk_${i}`] = responseMap.get(i);
             }
         }
         artists.push(artist);
@@ -134,13 +201,18 @@ export function parseArtists(str) {
     return artists;
 }
 
-export function xorDecode(str, key) {
+export function xorDecode(str: string, key: string) {
     return xor(base64Decode(str), key);
 }
 
-export function parseUsers(str)  {
+export interface TinyUser {
+    username: string;
+    accountID: number;
+}
+
+export function parseUsers(str: string) {
     const raw = str.split("|");
-    const users = {};
+    const users: Record<string, TinyUser> = {};
     for (const i of raw) {
         const user = i.split(":");
         users[user[0]] = {
@@ -157,16 +229,17 @@ export function generateRandomUUID() {
     return `${rs(8, hex)}-${rs(4, hex)}-4${rs(3, hex)}-${rs(4, hex)}-${rs(10, hex)}`;
 }
 
-export function generateLevelsHash(levels) {
+export function generateLevelsHash(levels: Level[]) {
     let hash = "";
     for (const level of levels) {
-        const id = level.metadata.id.toString();
+        const id = level.metadata.id?.toString();
+        if (!id || !level.metadata.stars) throw new Error("Invalid level data. Missing ID or stars.");
         hash += id[0] + id[id.length - 1] + level.metadata.stars.toString() + Number(level.metadata.verifiedCoins).toString();
     }
     return sha1(hash + constants.SALTS.LEVEL);
 }
 
-export function generateMapPacksHash(packs) {
+export function generateMapPacksHash(packs: MapPack[]) {
     let hash = "";
     for (const pack of packs) {
         const id = pack.id.toString();
@@ -175,7 +248,7 @@ export function generateMapPacksHash(packs) {
     return sha1(hash + constants.SALTS.LEVEL);
 }
 
-export function generateGauntletsHash(packs) {
+export function generateGauntletsHash(packs: GauntletPack[]) {
     let hash = "";
     for (const pack of packs) {
         hash += pack.id + pack.levels.join(",");
@@ -183,352 +256,474 @@ export function generateGauntletsHash(packs) {
     return sha1(hash + constants.SALTS.LEVEL);
 }
 
-export function generateDownloadHash2(level) {
+export function generateDownloadHash2(level: { password: string, playerID: number, stars: number, demon: boolean, id: number, verifiedCoins: boolean, featureScore: number, dailyNumber?: number }) {
     let password = level.password || 0;
     if (password && password != 1 && password != 0) password = Number(password) + 1000000;
     const hash = `${level.playerID},${level.stars},${Number(!!level.demon)},${level.id},${Number(!!level.verifiedCoins)},${level.featureScore},${password},${level.dailyNumber || 0}${constants.SALTS.LEVEL}`;
     return sha1(hash);
 }
 
-export function generateDownloadHash(levelString) {
+export function generateDownloadHash(levelString: string) {
     if (levelString.length < 41) return sha1(`${levelString}${constants.SALTS.LEVEL}`);
     let hash = `????????????????????????????????????????${constants.SALTS.LEVEL}`;
     const m = Math.floor(levelString.length / 40);
     let i = 40;
     while (i) {
-        hash = hash.slice(0, --i) + levelString[i*m] + hash.slice(i+1);
+        hash = hash.slice(0, --i) + levelString[i * m] + hash.slice(i + 1);
     }
     return sha1(hash);
 }
 
-export function generateUploadSeed2(levelString) {
+export function generateUploadSeed2(levelString: string) {
     if (levelString.length < 51) return chk([levelString], constants.KEYS.LEVEL, constants.SALTS.LEVEL);
     let hash = "??????????????????????????????????????????????????";
     const m = Math.floor(levelString.length / 50);
     let i = 50;
     while (i) {
-        hash = hash.slice(0, --i) + levelString[i*m] + hash.slice(i+1);
+        hash = hash.slice(0, --i) + levelString[i * m] + hash.slice(i + 1);
     }
     return chk([hash], constants.KEYS.LEVEL, constants.SALTS.LEVEL);
 }
-export function generateUploadListSeed(listLevels, accountID, seed2) {
+export function generateUploadListSeed(listLevels: string, accountID: string, seed2: string) {
     if (listLevels.length < 51) return chk([listLevels], seed2, accountID);
     let hash = "??????????????????????????????????????????????????";
     const m = Math.floor(listLevels.length / 50);
     let i = 50;
+
     while (i) {
-        hash = hash.slice(0, --i) + levelString[i*m] + hash.slice(i+1);
+        hash = hash.slice(0, --i) + listLevels[i * m] + hash.slice(i + 1);
     }
+
     return chk([hash], seed2, accountID);
 }
 
-export function parseMapPack(str) {
+export interface MapPack {
+    id: number;
+    levels?: number[];
+    stars: number;
+    coins: number;
+    name?: string;
+    difficulty?: number;
+    textColor?: { r: number, g: number, b: number };
+    barColor?: { r: number, g: number, b: number };
+}
+
+export function parseMapPack(str: string): MapPack {
     const raw = robTopSplit(str, ":");
-    const mp = {
+    const mp: MapPack = {
         id: Number(raw.get("1")),
-        levels: raw.get("3").split(",").map(i => Number(i)),
+        levels: raw.get("3")?.split(",").map(i => Number(i)),
         stars: Number(raw.get("4")),
         coins: Number(raw.get("5")),
     };
     if (raw.get("2")) mp.name = raw.get("2");
     if (raw.get("6")) mp.difficulty = Number(raw.get("6"));
     if (raw.get("7")) {
-        const txtCol = raw.get("7").split(",").map(c => Number(c));
-        mp.textColor = {r: txtCol[0], g: txtCol[1], b: txtCol[2]};
+        const txtCol = raw.get("7")!.split(",").map(c => Number(c));
+        mp.textColor = { r: txtCol[0], g: txtCol[1], b: txtCol[2] };
     }
     if (raw.get("8")) {
-        const barCol = raw.get("8").split(",").map(c => Number(c));
-        mp.barColor = {r: barCol[0], g: barCol[1], b: barCol[2]};
+        const barCol = raw.get("8")!.split(",").map(c => Number(c));
+        mp.barColor = { r: barCol[0], g: barCol[1], b: barCol[2] };
     }
-    for (const i of raw.keys()) {
-        if (!(["1", "2", "3", "4", "5", "6", "7", "8"].includes(i))) {
-            json[`unk_${i}`] = raw.get(i);
-        }
-    }
+
+    // for (const i of raw.keys()) {
+    //     if (!(["1", "2", "3", "4", "5", "6", "7", "8"].includes(i))) {
+    //         json[`unk_${i}`] = raw.get(i);
+    //     }
+    // }
+
     return mp;
 }
 
-export function parseLevel(str) {
-    const json = {};
-    const numberKeys = {
-        1: "id",
-        5: "version",
-        6: "playerID",
-        9: "difficulty",
-        10: "downloads",
-        11: "completions",
-        12: "officialSong",
-        13: "gameVersion",
-        14: "likes",
-        15: "length",
-        18: "stars",
-        19: "featureScore",
-        26: "recordString",
-        30: "copiedFromID",
-        35: "customSongID",
-        37: "coins",
-        39: "starsRequested",
-        41: "dailyNumber",
-        42: "epicRating",
-        43: "demonDifficulty",
-        45: "objects",
-        46: "editorTimeSeconds",
-        47: "editorTimeCopiesSeconds",
-        57: "verificationTimeFrames"
-    };
-    const stringKeys = {
-        2: "name",
-        26: "recordString",
-        28: "uploadDate",
-        29: "updateDate",
-        36: "extraString",
-        48: "settingsString"
-    };
-    const boolKeys = {
-        17: "demon",
-        25: "auto",
-        31: "twoPlayer",
-        38: "verifiedCoins",
-        40: "lowDetailMode",
-        44: "isGauntlet"
-    };
-    const raw = robTopSplit(str, ":");
+const levelNumberKeys = {
+    1: "id",
+    5: "version",
+    6: "playerID",
+    9: "difficulty",
+    10: "downloads",
+    11: "completions",
+    12: "officialSong",
+    13: "gameVersion",
+    14: "likes",
+    15: "length",
+    18: "stars",
+    19: "featureScore",
+    30: "copiedFromID",
+    35: "customSongID",
+    37: "coins",
+    39: "starsRequested",
+    41: "dailyNumber",
+    42: "epicRating",
+    43: "demonDifficulty",
+    45: "objects",
+    46: "editorTimeSeconds",
+    47: "editorTimeCopiesSeconds",
+    57: "verificationTimeFrames"
+} as const;
+const levelStringKeys = {
+    2: "name",
+    26: "recordString",
+    28: "uploadDate",
+    29: "updateDate",
+    36: "extraString",
+    48: "settingsString"
+} as const;
+const levelBoolKeys = {
+    17: "demon",
+    25: "auto",
+    31: "twoPlayer",
+    38: "verifiedCoins",
+    40: "lowDetailMode",
+    44: "isGauntlet"
+} as const;
+
+export interface Level {
+    metadata: LevelMetaData;
+    parsedAt: number;
+    levelString?: string;
+}
+
+interface LevelMetaData extends
+    Record<typeof levelNumberKeys[keyof typeof levelNumberKeys], number | undefined>,
+    Record<typeof levelStringKeys[keyof typeof levelStringKeys], string | undefined>,
+    Record<typeof levelBoolKeys[keyof typeof levelBoolKeys], boolean | undefined> {
+    description?: string;
+    password?: string;
+    songIDs?: string[];
+    sfxIDs?: string[];
+}
+
+export function parseLevel(str: string): Level {
+    const json: Partial<LevelMetaData> = {};
+    const raw = robTopSplit(str, ":");  // "1:22:5:1:10:1000" -> { 1: "22", 5: "1", 10: "1000" } -> { id: 22, version: 1, downloads: 1000 }
     const levelString = raw.get("4");
-    for (const i of Object.entries(numberKeys)) {
-        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = Number(raw.get(i[0].toString())) || 0;
+    for (const [keyID, key] of Object.entries(levelNumberKeys)) {
+        const value = raw.get(keyID);
+        if (value === undefined) continue;
+        json[key] = Number(value) || 0;
     }
-    for (const i of Object.entries(stringKeys)) {
-        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = raw.get(i[0].toString()) || "";
+    for (const [keyID, key] of Object.entries(levelStringKeys)) {
+        const value = raw.get(keyID);
+        if (value == undefined) continue;
+        json[key] = value;
     }
-    for (const i of Object.entries(boolKeys)) {
+    for (const i of Object.entries(levelBoolKeys)) {
         if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
             json[i[1]] = raw.get(i[0].toString()) ? !!Number(raw.get(i[0].toString())) : false;
     }
     if (raw.get("3")) {
-        json.description = base64Decode(raw.get("3")).toString();
+        json.description = base64Decode(raw.get("3")!).toString();
+        // eslint-disable-next-line no-control-regex
         if (json.description.match(/[\x00-\x1f]/)) {
             json.description = raw.get("3");
         }
     }
-    if (Number(raw.get("8"))) {
+    if (Number(raw.get("8")) && json.difficulty) {
         json.difficulty /= Number(raw.get("8"));
     }
     if (raw.get("27")) {
-        const password = xor(base64Decode(raw.get("27")).toString(), constants.KEYS.LEVEL_PASSWORD);
+        const password = xor(base64Decode(raw.get("27")!).toString(), constants.KEYS.LEVEL_PASSWORD);
         if (password.toString().length != 1)
             json.password = password.slice(1);
         else
             json.password = password;
     }
     if (raw.get("52")) {
-        json.songIDs = raw.get("52").split(",");
+        json.songIDs = raw.get("52")!.split(",");
     }
     if (raw.get("53")) {
-        json.sfxIDs = raw.get("53").split(",");
+        json.sfxIDs = raw.get("53")!.split(",");
     }
-    for (const i of raw.keys()) {
-        if (!boolKeys[i] && !stringKeys[i] && !numberKeys[i] && !(["3", "4", "8", "27", "52", "53"].includes(i))) {
-            json[`unk_${i}`] = raw.get(i);
-        }
-    }
+
+    // Add unknown keys to the metadata
+    // for (const i of raw.keys()) {
+    //     if (!levelBoolKeys[i] && !levelStringKeys[i] && !levelNumberKeys[i] && !(["3", "4", "8", "27", "52", "53"].includes(i))) {
+    //         json[`unk_${i}`] = raw.get(i);
+    //     }
+    // }
+
     const date = Date.now();
-    const value = {
-        metadata: json,
+    const value: Level = {
+        metadata: json as LevelMetaData,
         parsedAt: date
     };
     if (levelString) value.levelString = levelString;
     return value;
 }
-export function parseLevelOld(str) {
-    const json = {};
-    const numberKeys = {
-        1: "id",
-        5: "version",
-        6: "playerID",
-        9: "difficulty",
-        10: "downloads",
-        11: "completions",
-        12: "officialSong",
-        13: "gameVersion",
-        14: "likes",
-        15: "length",
-        18: "stars",
-        19: "featureScore",
-        26: "recordString",
-        30: "copiedFromID",
-        35: "customSongID",
-    };
-    const stringKeys = {
-        2: "name",
-        26: "recordString",
-        27: "password",
-        28: "uploadDate",
-        29: "updateDate",
-        36: "extraString"
-    };
-    const boolKeys = {
-        17: "demon",
-        25: "auto",
-        31: "twoPlayer"
-    };
+
+const levelOldNumberKeys = {
+    1: "id",
+    5: "version",
+    6: "playerID",
+    9: "difficulty",
+    10: "downloads",
+    11: "completions",
+    12: "officialSong",
+    13: "gameVersion",
+    14: "likes",
+    15: "length",
+    18: "stars",
+    19: "featureScore",
+    30: "copiedFromID",
+    35: "customSongID",
+} as const;
+const levelOldStringKeys = {
+    2: "name",
+    26: "recordString",
+    27: "password",
+    28: "uploadDate",
+    29: "updateDate",
+    36: "extraString",
+} as const;
+const levelOldBoolKeys = {
+    17: "demon",
+    25: "auto",
+    31: "twoPlayer",
+} as const;
+
+export interface LevelOldMetaData extends
+    Record<typeof levelOldNumberKeys[keyof typeof levelOldNumberKeys], number | undefined>,
+    Record<typeof levelOldStringKeys[keyof typeof levelOldStringKeys], string | undefined>,
+    Record<typeof levelOldBoolKeys[keyof typeof levelOldBoolKeys], boolean | undefined> {
+    description?: string;
+    verifiedCoins?: boolean;
+    lowDetailMode?: boolean;
+    isGauntlet?: boolean;
+    songIDs?: string[];
+    sfxIDs?: string[];
+}
+
+export interface LevelOld {
+    metadata: LevelOldMetaData;
+    parsedAt: number;
+    levelString?: string;
+}
+
+export function parseLevelOld(str: string) {
+    const level: Partial<LevelOldMetaData> = {};
+
     const raw = robTopSplit(str, ":");
     const levelString = raw.get("4");
-    for (const i of Object.entries(numberKeys)) {
+    for (const i of Object.entries(levelOldNumberKeys)) {
         if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = Number(raw.get(i[0].toString())) || 0;
+            level[i[1]] = Number(raw.get(i[0].toString())) || 0;
     }
-    for (const i of Object.entries(stringKeys)) {
+    for (const i of Object.entries(levelOldStringKeys)) {
         if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = raw.get(i[0].toString()) || "";
+            level[i[1]] = raw.get(i[0].toString()) || "";
     }
-    for (const i of Object.entries(boolKeys)) {
+    for (const i of Object.entries(levelOldBoolKeys)) {
         if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = raw.get(i[0].toString()) ? !!Number(raw.get(i[0].toString())) : false;
+            level[i[1]] = raw.get(i[0].toString()) ? !!Number(raw.get(i[0].toString())) : false;
     }
     if (raw.get("3")) {
-        json.description = base64Decode(raw.get("3")).toString();
-        if (json.description.match(/[\x00-\x1f]/)) {
-            json.description = raw.get("3");
+        level.description = base64Decode(raw.get("3")!).toString();
+        // eslint-disable-next-line no-control-regex
+        if (level.description.match(/[\x00-\x1f]/)) {
+            level.description = raw.get("3");
         }
     }
-    if (Number(raw.get("8"))) {
-        json.difficulty /= Number(raw.get("8"));
+    if (Number(raw.get("8")) && level.difficulty) {
+        level.difficulty /= Number(raw.get("8"));
     }
-    for (const i of raw.keys()) {
-        if (!boolKeys[i] && !stringKeys[i] && !numberKeys[i] && !(["3", "4", "8"].includes(i))) {
-            json[`unk_${i}`] = raw.get(i);
-        }
-    }
+
+    // for (const i of raw.keys()) {
+    //     if (!levelOldBoolKeys[i] && !levelOldStringKeys[i] && !levelOldNumberKeys[i] && !(["3", "4", "8"].includes(i))) {
+    //         level[`unk_${i}`] = raw.get(i);
+    //     }
+    // }
+
     const date = Date.now();
-    const value = {
-        metadata: json,
-        parsedAt: date
+    const value: {
+        metadata: LevelOldMetaData;
+        parsedAt: number;
+        levelString?: string;
+    } = {
+        metadata: level as LevelOldMetaData,
+        parsedAt: date,
     };
     if (levelString) value.levelString = levelString;
-    return value;
+    return value as LevelOld;
 }
 
-export function parseList(str) {
-    const json = {};
-    const numberKeys = {
-        1: "id",
-        5: "version",
-        6: "playerID",
-        7: "difficulty",
-        10: "downloads",
-        14: "likes",
-        15: "length",
-        18: "stars",
-        28: "uploadDate",
-        29: "updateDate",
-        55: "listReward",
-        56: "listRewardRequirement"
-    };
-    const stringKeys = {
-        2: "name",
-        50: "username"
-    };
-    const boolKeys = {
-        19: "featured"
-    };
+const listNumberKeys = {
+    1: "id",
+    5: "version",
+    6: "playerID",
+    7: "difficulty",
+    10: "downloads",
+    14: "likes",
+    15: "length",
+    18: "stars",
+    28: "uploadDate",
+    29: "updateDate",
+    55: "listReward",
+    56: "listRewardRequirement"
+} as const;
+const listStringKeys = {
+    2: "name",
+    50: "username"
+} as const;
+const listBoolKeys = {
+    19: "featured"
+} as const;
+
+export interface List extends
+    Record<typeof listNumberKeys[keyof typeof listNumberKeys], number | undefined>,
+    Record<typeof listStringKeys[keyof typeof listStringKeys], string | undefined>,
+    Record<typeof listBoolKeys[keyof typeof listBoolKeys], boolean | undefined> {
+    levels?: string[];
+}
+
+export function parseList(str: string): List {
+    const list: Partial<List> = {};
     const raw = robTopSplit(str, ":");
-    for (const i of Object.entries(numberKeys)) {
-        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = Number(raw.get(i[0].toString())) || 0;
+    for (const i of Object.entries(listNumberKeys)) {
+        const value = raw.get(i[0].toString());
+        if (value != undefined && value != null)
+            list[i[1]] = Number(value) || 0;
     }
-    for (const i of Object.entries(stringKeys)) {
-        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = raw.get(i[0].toString()) || "";
+    for (const i of Object.entries(listStringKeys)) {
+        const value = raw.get(i[0].toString());
+        if (value != undefined && value != null)
+            list[i[1]] = value || "";
     }
-    for (const i of Object.entries(boolKeys)) {
-        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = raw.get(i[0].toString()) ? !!Number(raw.get(i[0].toString())) : false;
+    for (const i of Object.entries(listBoolKeys)) {
+        const value = raw.get(i[0].toString());
+        if (value != undefined && value != null)
+            list[i[1]] = value ? !!Number(value) : false;
     }
     if (raw.get("51")) {
-        json.levels = raw.get("51").split(",");
+        list.levels = raw.get("51")!.split(",");
     }
-    for (const i of raw.keys()) {
-        if (!boolKeys[i] && !stringKeys[i] && !numberKeys[i] && i != "51") {
-            json[`unk_${i}`] = raw.get(i);
-        }
-    }
-    return json;
+
+    // for (const i of raw.keys()) {
+    //     if (!listBoolKeys[i] && !listStringKeys[i] && !listNumberKeys[i] && i != "51") {
+    //         list[`unk_${i}`] = raw.get(i);
+    //     }
+    // }
+
+    return list as List;
 }
 
-export function parseUser(str, sep) {
-    const json = {};
-    const numberKeys = {
-        2: "playerID",
-        3: "stars",
-        4: "demons",
-        6: "rank",
-        7: "accountHighlight",
-        8: "creatorPoints",
-        9: "iconID",
-        10: "color1",
-        11: "color2",
-        13: "secretCoins",
-        14: "iconType",
-        15: "special",
-        16: "accountID",
-        17: "userCoins",
-        18: "messagePermissions",
-        19: "friendPermissions",
-        21: "cube",
-        22: "ship",
-        23: "ball",
-        24: "ufo",
-        25: "wave",
-        26: "robot",
-        27: "trail",
-        28: "glow",
-        30: "globalRank",
-        31: "friendState",
-        32: "friendRequestID",
-        38: "messages",
-        39: "friendRequests",
-        40: "newFriends",
-        43: "spider",
-        46: "diamonds",
-        48: "deathEffect",
-        49: "modLevel",
-        50: "commentHistoryPermissions",
-        51: "color3",
-        52: "moons",
-        53: "swing",
-        54: "jetpack"
+const userNumberKeys = {
+    2: "playerID",
+    3: "stars",
+    4: "demons",
+    6: "rank",
+    7: "accountHighlight",
+    8: "creatorPoints",
+    9: "iconID",
+    10: "color1",
+    11: "color2",
+    13: "secretCoins",
+    14: "iconType",
+    15: "special",
+    16: "accountID",
+    17: "userCoins",
+    18: "messagePermissions",
+    19: "friendPermissions",
+    21: "cube",
+    22: "ship",
+    23: "ball",
+    24: "ufo",
+    25: "wave",
+    26: "robot",
+    27: "trail",
+    28: "glow",
+    30: "globalRank",
+    31: "friendState",
+    32: "friendRequestID",
+    38: "messages",
+    39: "friendRequests",
+    40: "newFriends",
+    43: "spider",
+    46: "diamonds",
+    48: "deathEffect",
+    49: "modLevel",
+    50: "commentHistoryPermissions",
+    51: "color3",
+    52: "moons",
+    53: "swing",
+    54: "jetpack"
+} as const;
+const userStringKeys = {
+    1: "username",
+    20: "youtube",
+    37: "friendRequestAge",
+    42: "scoreAge",
+    44: "twitter",
+    45: "twitch"
+} as const;
+const userBoolKeys = {
+    29: "isRegistered",
+    41: "newFriendRequest"
+} as const;
+
+export interface User extends
+    Record<typeof userNumberKeys[keyof typeof userNumberKeys], number | undefined>,
+    Record<typeof userStringKeys[keyof typeof userStringKeys], string | undefined>,
+    Record<typeof userBoolKeys[keyof typeof userBoolKeys], boolean | undefined> {
+    comment?: string;
+    demonCounts?: {
+        classic: {
+            easy: number;
+            medium: number;
+            hard: number;
+            insane: number;
+            extreme: number;
+        };
+        platformer: {
+            easy: number;
+            medium: number;
+            hard: number;
+            insane: number;
+            extreme: number;
+        };
+        weekly: number;
+        gauntlet: number;
     };
-    const stringKeys = {
-        1: "username",
-        20: "youtube",
-        35: "comment",
-        37: "friendRequestAge",
-        42: "scoreAge",
-        44: "twitter",
-        45: "twitch"
-    };
-    const boolKeys = {
-        29: "isRegistered",
-        41: "newFriendRequest"
-    };
-    const raw = robTopSplit(str, sep || ":");
-    for (const i of Object.entries(numberKeys)) {
-        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = Number(raw.get(i[0].toString())) || 0;
+    levelCounts?: {
+        classic?: {
+            auto: number;
+            easy: number;
+            normal: number;
+            hard: number;
+            harder: number;
+            insane: number;
+        };
+        platformer?: {
+            auto: number;
+            easy: number;
+            normal: number;
+            hard: number;
+            harder: number;
+            insane: number;
+        };
+        daily?: number;
+        gauntlet?: number;
     }
-    for (const i of Object.entries(stringKeys)) {
+}
+
+export function parseUser(str: string, sep = ":"): User {
+    const user: Partial<User> = {};
+    const raw = robTopSplit(str, sep);
+    for (const i of Object.entries(userNumberKeys)) {
         if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = raw.get(i[0].toString()) || "";
+            user[i[1]] = Number(raw.get(i[0].toString())) || 0;
     }
-    for (const i of Object.entries(boolKeys)) {
+    for (const i of Object.entries(userStringKeys)) {
         if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = raw.get(i[0].toString()) ? !!Number(raw.get(i[0].toString())) : false;
+            user[i[1]] = raw.get(i[0].toString()) || "";
+    }
+    for (const i of Object.entries(userBoolKeys)) {
+        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
+            user[i[1]] = raw.get(i[0].toString()) ? !!Number(raw.get(i[0].toString())) : false;
     }
     if (raw.get("55")) {
-        const dc = raw.get("55").split(",");
-        json.demonCounts = {
+        const dc = raw.get("55")!.split(",");
+        user.demonCounts = {
             classic: {
                 easy: Number(dc[0]),
                 medium: Number(dc[1]),
@@ -548,8 +743,8 @@ export function parseUser(str, sep) {
         };
     }
     if (raw.get("56")) {
-        const lc = raw.get("56").split(",");
-        json.levelCounts = {
+        const lc = raw.get("56")!.split(",");
+        user.levelCounts = {
             classic: {
                 auto: Number(lc[0]),
                 easy: Number(lc[1]),
@@ -563,9 +758,9 @@ export function parseUser(str, sep) {
         };
     }
     if (raw.get("57")) {
-        const lcP = raw.get("57").split(",");
-        if (!json.levelCounts) json.levelCounts = {};
-        json.levelCounts.platformer = {
+        const lcP = raw.get("57")!.split(",");
+        if (!user.levelCounts) user.levelCounts = {};
+        user.levelCounts.platformer = {
             auto: Number(lcP[0]),
             easy: Number(lcP[1]),
             normal: Number(lcP[2]),
@@ -574,104 +769,129 @@ export function parseUser(str, sep) {
             insane: Number(lcP[5])
         };
     }
-    if (raw.get("35")) json.comment = base64Decode(raw.get("35"));
-    for (const i of raw.keys()) {
-        if (!boolKeys[i] && !stringKeys[i] && !numberKeys[i] && !(["55", "56", "57"]).includes(i)) {
-            json[`unk_${i}`] = raw.get(i);
-        }
-    }
-    return json;
+    if (raw.get("35")) user.comment = base64Decode(raw.get("35")!);
+
+    // for (const i of raw.keys()) {
+    //     if (!userBoolKeys[i] && !userStringKeys[i] && !userNumberKeys[i] && !(["55", "56", "57"]).includes(i)) {
+    //         user[`unk_${i}`] = raw.get(i);
+    //     }
+    // }
+
+    return user as User;
 }
-export function parseComment(str) {
-    const json = {};
-    const numberKeys = {
-        1: "levelID",
-        3: "playerID",
-        4: "likes",
-        6: "id",
-        8: "accountID",
-        10: "percent",
-        11: "modBadge"
-    };
-    const stringKeys = {
-        9: "age"
-    };
-    const boolKeys = {
-        7: "spam"
-    };
+const commentNumberKeys = {
+    1: "levelID",
+    3: "playerID",
+    4: "likes",
+    6: "id",
+    8: "accountID",
+    10: "percent",
+    11: "modBadge"
+} as const;
+const commentStringKeys = {
+    9: "age"
+} as const;
+const commentBoolKeys = {
+    7: "spam"
+} as const;
+
+export interface Comment extends
+    Record<typeof commentNumberKeys[keyof typeof commentNumberKeys], number | undefined>,
+    Record<typeof commentStringKeys[keyof typeof commentStringKeys], string | undefined>,
+    Record<typeof commentBoolKeys[keyof typeof commentBoolKeys], boolean | undefined> {
+    user?: User;
+    content?: string;
+    textColor?: { r: string, g: string, b: string };
+}
+
+export function parseComment(str: string): Comment {
+    const comment: Partial<Comment> = {};
     const segments = str.split(":");
     const rawComment = robTopSplit(segments[0], "~");
     if (segments[1]) {
         const rawUser = parseUser(segments[1], "~");
-        json.user = rawUser;
+        comment.user = rawUser;
     }
-    for (const i of Object.entries(numberKeys)) {
+    for (const i of Object.entries(commentNumberKeys)) {
         if (rawComment.get(i[0].toString()) != undefined && rawComment.get(i[0].toString()) != null)
-            json[i[1]] = Number(rawComment.get(i[0].toString())) || 0;
+            comment[i[1]] = Number(rawComment.get(i[0].toString())) || 0;
     }
-    for (const i of Object.entries(stringKeys)) {
+    for (const i of Object.entries(commentStringKeys)) {
         if (rawComment.get(i[0].toString()) != undefined && rawComment.get(i[0].toString()) != null)
-            json[i[1]] = rawComment.get(i[0].toString()) || "";
+            comment[i[1]] = rawComment.get(i[0].toString()) || "";
     }
-    for (const i of Object.entries(boolKeys)) {
+    for (const i of Object.entries(commentBoolKeys)) {
         if (rawComment.get(i[0].toString()) != undefined && rawComment.get(i[0].toString()) != null)
-            json[i[1]] = rawComment.get(i[0].toString()) ? !!Number(rawComment.get(i[0].toString())) : false;
+            comment[i[1]] = rawComment.get(i[0].toString()) ? !!Number(rawComment.get(i[0].toString())) : false;
     }
     if (rawComment.get("2")) {
-        json.content = base64Decode(rawComment.get("2"));
+        comment.content = base64Decode(rawComment.get("2")!);
     }
     if (rawComment.get("12")) {
-        const rgb = rawComment.get("12").split(",");
-        json.textColor = {r: rgb[0], g: rgb[1], b: rgb[2]};
+        const rgb = rawComment.get("12")!.split(",");
+        comment.textColor = { r: rgb[0], g: rgb[1], b: rgb[2] };
     }
-    for (const i of raw.keys()) {
-        if (!boolKeys[i] && !stringKeys[i] && !numberKeys[i]) {
-            json[`unk_${i}`] = raw.get(i);
-        }
-    }
-    return json;
-}
-export function parseMessage(str) {
-    const json = {};
-    const numberKeys = {
-        1: "id",
-        2: "accountID",
-        3: "playerID"
-    };
-    const stringKeys = {
-        4: "title",
-        5: "content",
-        6: "username",
-        7: "age"
-    };
-    const boolKeys = {
-        8: "read",
-        9: "outgoing"
-    };
-    const raw = robTopSplit(str, ":");
-    for (const i of Object.entries(numberKeys)) {
-        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = Number(raw.get(i[0].toString())) || 0;
-    }
-    for (const i of Object.entries(stringKeys)) {
-        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = raw.get(i[0].toString()) || "";
-    }
-    for (const i of Object.entries(boolKeys)) {
-        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
-            json[i[1]] = raw.get(i[0].toString()) ? !!Number(raw.get(i[0].toString())) : false;
-    }
-    if (raw.get("4")) json.title = base64Decode(raw.get("4"));
-    if (raw.get("5")) json.content = xor(base64Decode(raw.get("5")), constants.KEYS.MESSAGES);
-    for (const i of raw.keys()) {
-        if (!boolKeys[i] && !stringKeys[i] && !numberKeys[i]) {
-            json[`unk_${i}`] = raw.get(i);
-        }
-    }
-    return json;
+
+    // for (const i of rawComment.keys()) {
+    //     if (!commentBoolKeys[i] && !commentStringKeys[i] && !commentNumberKeys[i]) {
+    //         comment[`unk_${i}`] = rawComment.get(i);
+    //     }
+    // }
+
+    return comment as Comment;
 }
 
-export function tryUnzip(data) {
+const messageNumberKeys = {
+    1: "id",
+    2: "accountID",
+    3: "playerID"
+} as const;
+const messageStringKeys = {
+    4: "title",
+    5: "content",
+    6: "username",
+    7: "age"
+} as const;
+const messageBoolKeys = {
+    8: "read",
+    9: "outgoing"
+} as const;
+
+export interface Message extends
+    Record<typeof messageNumberKeys[keyof typeof messageNumberKeys], number | undefined>,
+    Record<typeof messageStringKeys[keyof typeof messageStringKeys], string | undefined>,
+    Record<typeof messageBoolKeys[keyof typeof messageBoolKeys], boolean | undefined> {
+}
+
+export function parseMessage(str: string): Message {
+    const message: Partial<Message> = {};
+    const raw = robTopSplit(str, ":");
+
+    for (const i of Object.entries(messageNumberKeys)) {
+        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
+            message[i[1]] = Number(raw.get(i[0].toString())) || 0;
+    }
+    for (const i of Object.entries(messageStringKeys)) {
+        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
+            message[i[1]] = raw.get(i[0].toString()) || "";
+    }
+    for (const i of Object.entries(messageBoolKeys)) {
+        if (raw.get(i[0].toString()) != undefined && raw.get(i[0].toString()) != null)
+            message[i[1]] = raw.get(i[0].toString()) ? !!Number(raw.get(i[0].toString())) : false;
+    }
+    if (raw.get("4")) message.title = base64Decode(raw.get("4")!);
+    if (raw.get("5")) message.content = xor(base64Decode(raw.get("5")!), constants.KEYS.MESSAGES);
+
+    // for (const i of raw.keys()) {
+    //     if (!messageBoolKeys[i] && !messageStringKeys[i] && !messageNumberKeys[i]) {
+    //         message[`unk_${i}`] = raw.get(i);
+    //     }
+    // }
+
+    return message as Message;
+}
+
+export function tryUnzip(data: Buffer): Buffer {
     let unzipped;
     try {
         unzipped = zlib.inflateSync(data);
@@ -690,10 +910,10 @@ export function tryUnzip(data) {
             }
         }
     }
-    return unzipped.toString();
+    return unzipped;
 }
 
-export function getDefaultSavePath(os) {
+export function getDefaultSavePath(os: string) {
     if (!os) os = process.platform;
     switch (os) {
         case "win32":
@@ -703,7 +923,8 @@ export function getDefaultSavePath(os) {
     }
     return "";
 }
-export function generateLeaderboardSeed(clicks, percentage, seconds, hasPlayed) {
+
+export function generateLeaderboardSeed(clicks: number, percentage: number, seconds: number, hasPlayed?: number) {
     if (hasPlayed == undefined) hasPlayed = 1;
     return (
         1482 * hasPlayed
@@ -711,14 +932,33 @@ export function generateLeaderboardSeed(clicks, percentage, seconds, hasPlayed) 
         + ((seconds + 4085) ** 2) - 50028039
     );
 }
-export function generatePlatformerLeaderboardSeed(bestTime, bestPoints) {
+
+export function generatePlatformerLeaderboardSeed(bestTime: number, bestPoints: number) {
     return (((((bestTime + 7890) % 34567) * 601 + ((Math.abs(bestPoints) + 3456) % 78901) * 967 + 94819) % 94433) * 829) % 77849;
 }
-export function decodeAudioLibrary(library) {
+
+export function decodeAudioLibrary(library: string) {
     return tryUnzip(base64DecodeBuffer(library));
 }
-export function parseMusicLibrary(library) {
-    const decoded = decodeAudioLibrary(library).split("|");
+
+interface MusicLibrarySong {
+    id: number;
+    name: string;
+    primaryArtistID: number;
+    filesize: number;
+    duration: number;
+    tags: number[];
+    musicPlatform?: number;
+    extraArtists?: number[];
+    externalLink?: string;
+    newButton?: boolean;
+    priorityOrder?: number;
+    songNumber?: number;
+}
+
+export function parseMusicLibrary(library: string) {
+    const decoded = decodeAudioLibrary(library).toString("utf8").split("|");
+
     const artists = decoded[1].split(";").map(a => {
         if (a == "") return null;
         const segments = a.split(",");
@@ -729,10 +969,12 @@ export function parseMusicLibrary(library) {
             youtube: segments[3]
         };
     }).filter(a => !!a);
-    let songs = decoded[2].split(";").map(s => s.split(","));
+
+    const songs = decoded[2].split(";").map(s => s.split(","));
+    const parsedSongs: MusicLibrarySong[] = [];
     if (songs[0]) {
         if (songs[0].length == 6) { // 2.200
-            songs = songs.map(segments => {
+            parsedSongs.push(...songs.map(segments => {
                 if (segments[0] == "") return null;
                 return {
                     id: Number(segments[0]),
@@ -742,15 +984,15 @@ export function parseMusicLibrary(library) {
                     duration: Number(segments[4]),
                     tags: segments[5].split(".").map(t => Number(t))
                 };
-            }).filter(s => !!s);
+            }).filter(s => !!s));
         } else if (songs[0].length == 12) { // 2.206
-            songs = songs.map(segments => {
+            parsedSongs.push(...songs.map(segments => {
                 if (segments[0] == "") return null;
                 return {
                     id: Number(segments[0]),
                     name: segments[1],
                     primaryArtistID: Number(segments[2]),
-                    fileSize: Number(segments[3]),
+                    filesize: Number(segments[3]),
                     duration: Number(segments[4]),
                     tags: segments[5].split(".").map(t => Number(t)),
                     musicPlatform: Number(segments[6]),
@@ -760,14 +1002,16 @@ export function parseMusicLibrary(library) {
                     priorityOrder: Number(segments[10]),
                     songNumber: Number(segments[11])
                 };
-            }).filter(s => !!s);
+            }).filter(s => !!s));
         } else throw new Error("Unsupported music library format");
     }
+
     const tagsUnparsed = decoded[3].split(";").map(t => t.split(","));
-    const tags = {};
+    const tags: Record<number, string> = {};
     for (const tag of tagsUnparsed) {
         if (tag[1]) tags[Number(tag[0])] = tag[1];
     }
+
     return {
         version: Number(decoded[0]),
         artists,
@@ -775,8 +1019,8 @@ export function parseMusicLibrary(library) {
         tags
     };
 }
-export function parseSFXLibrary(library, directoryTree) {
-    const decoded = decodeAudioLibrary(library).split("|");
+export function parseSFXLibrary(library: string, directoryTree = false) {
+    const decoded = decodeAudioLibrary(library).toString("ascii").split("|");
     const objects = decoded[0].split(";").filter(e => !!e);
     const credits = decoded[1].split(";").filter(e => !!e).map(d => {
         const c = d.split(",");
@@ -785,7 +1029,7 @@ export function parseSFXLibrary(library, directoryTree) {
             link: c[1]
         };
     });
-    
+
     const version = Number(objects[0].split(",")[1]);
     if (!directoryTree) {
         const files = objects.map(o => {
@@ -805,11 +1049,29 @@ export function parseSFXLibrary(library, directoryTree) {
             files
         };
     }
-    const files = {};
-    
+    const files: Record<string, {
+        id: number;
+        name: string;
+        isFolder?: boolean;
+        parentFolder?: number;
+        fileSize?: number;
+        duration?: number;
+        files?: object[];
+        moved?: boolean;
+    }> = {};
+
     for (const i of objects) {
         const properties = i.split(",");
-        const obj = {
+        const obj: {
+            id: number;
+            name: string;
+            isFolder?: boolean;
+            parentFolder?: number;
+            fileSize?: number;
+            duration?: number;
+            files?: object[];
+            moved?: boolean;
+        } = {
             id: Number(properties[0]),
             name: properties[1],
         };
@@ -819,7 +1081,7 @@ export function parseSFXLibrary(library, directoryTree) {
             obj.parentFolder = Number(properties[3]);
             files[properties[0]] = obj;
         } else {
-            obj.fileSize = Number(properties[4]),
+            obj.fileSize = Number(properties[4]);
             obj.duration = Number(properties[5]);
             if (!files[properties[3]]) {
                 files[properties[3]] = {
@@ -828,12 +1090,12 @@ export function parseSFXLibrary(library, directoryTree) {
                     files: []
                 };
             }
-            files[properties[3]].files.push(obj);
+            files[properties[3]].files?.push(obj);
         }
     }
     for (const i of Object.values(files)) {
         if (i.isFolder) {
-            files[i.parentFolder.toString()].files.push(i);
+            files[i.parentFolder!.toString()].files?.push(i);
             files[i.id.toString()].moved = true;
         }
     }
